@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Text, StyleSheet,Button } from 'react-native'
 
 import { Context as LangContext } from '../../src/context/LangContext'
-import { Context as AuthContext } from '../../src/context/AuthContext'
+import { AuthContext2 } from '../../src/context/AuthContext2'
 
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik'
@@ -18,7 +18,7 @@ let validationSchema = yup.object().shape({
 const Login = (props) => {
 
     const contextLang = useContext(LangContext)
-    const { state, login } = useContext(AuthContext)
+    const { signIn } = useContext(AuthContext2)
 
     const userInfo = {  email: "", password: ""}
     const navigation = useNavigation();
@@ -28,7 +28,7 @@ const Login = (props) => {
     return(
         <>
 
-            <Formik validationSchema={validationSchema} initialValues={userInfo} onSubmit={(values) => login(values)}>
+            <Formik validationSchema={validationSchema} initialValues={userInfo} onSubmit={(values) => signIn(values)}>
 
                 {({ values, errors, handleSubmit, handleChange }) => {
                     const { email, password } = values
@@ -50,7 +50,7 @@ const Login = (props) => {
                             <FormSubmitButton
                                 onPress={handleSubmit}
                                 title='Sign up' />
-                            {state.errorMessage ? <Text>{state.errorMessage}</Text> : null}
+                            {/* {state.errorMessage ? <Text>{state.errorMessage}</Text> : null} */}
                         </>
                     )
                 }}
