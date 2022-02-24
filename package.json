@@ -27,7 +27,8 @@
     "axios": "^0.26.0",
     "formik": "^2.2.9",
     "react-navigation": "^4.4.4",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "expo-linear-gradient": "^11.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

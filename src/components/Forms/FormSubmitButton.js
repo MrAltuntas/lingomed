@@ -1,17 +1,18 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import GlobalStyles from '../../style/Global'
 
 const FormSubmitButton = ({ title, submitting, onPress }) => {
   const backgroundColor = submitting
-    ? 'rgba(27,27,51,0.4)'
-    : 'rgba(27,27,51,1)';
+    ? '#075CAB'
+    : '#2174c2';
 
   return (
     <TouchableOpacity
       onPress={!submitting ? onPress : null}
-      style={[styles.container, { backgroundColor }]}
+      style={[GlobalStyles.button, { backgroundColor }]}
     >
-      <Text style={{ fontSize: 18, color: '#fff' }}>{title}</Text>
+      <Text style={GlobalStyles.text}>{title}</Text>
     </TouchableOpacity>
   );
 };
