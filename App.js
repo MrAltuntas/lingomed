@@ -177,7 +177,7 @@ function App() {
             </Drawer.Navigator>
             :
             <AuthStack.Navigator initialRouteName="Login">
-              <AuthStack.Screen options={{ title: 'Lingomed'}} name="Register" component={Register} />
+              <AuthStack.Screen options={{ title: 'Lingomed', headerShown: false}} name="Register" component={Register} />
               <AuthStack.Screen options={{ title: 'Login', headerShown: false }} name="Login" component={Login} />
               <AuthStack.Screen options={{ title: 'Forget your password'}} name="ForgetPassword" component={ForgetPassword} />
             </AuthStack.Navigator>

@@ -45,6 +45,7 @@ const Login = (props) => {
                                 <FormInput value={email}
                                     style={GlobalStyles.input}
                                     placeholder="E-posta Adresiniz"
+                                    keyboardType={"email-address"}
                                     placeholderTextColor="#9D9FA0"
                                     error={errors.email}
                                     onChangeText={handleChange("email")} />
