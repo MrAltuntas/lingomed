@@ -32,7 +32,7 @@ const Register = (props) => {
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">
             <View style={GlobalStyles.container}>
-            <LinearGradient />
+            <LinearGradient startPlace={1} endPlace={0} height={300}/>
             <Logo />
                 <Formik validationSchema={validationSchema} initialValues={userInfo} onSubmit={(values) => signUp(values)}>
 
