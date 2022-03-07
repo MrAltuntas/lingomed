@@ -1,9 +1,10 @@
 import { NavigationContainer } from '@react-navigation/native'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { DrawerContent } from './src/screens/NavigationContents/DrawerContent';
 
 import { Provider as LangProvider } from './src/context/LangContext'
-import { Provider as AuthProvider } from './src/context/AuthContext'
 import { navigationRef } from './src/RootNavigation';
 
 import mainApi from './src/api/mainApi';
@@ -12,46 +13,76 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
 
+import { AuthContext2 } from "./src/context/AuthContext2";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+
+//screens
+import LessonsAndDic from './src/screens/LessonsAndDic';
+import Profile from './src/screens/Profile';
 import Login from './src/screens/Login';
 import ForgetPassword from './src/screens/ForgetPassword'
 import Register from './src/screens/Register';
 import Welcome from './src/screens/Welcome';
+import Welcome2 from './src/screens/Welcome2';
 
-import { AuthContext2 } from "./src/context/AuthContext2";
-import Profile from './src/screens/Profile';
+
+//sub screens
+import Competitors from './src/screens/subscreens/Competitors';
+import Friends from './src/screens/subscreens/Friends';
+import Statistics from './src/screens/subscreens/Statistics';
+import WriteUs from './src/screens/subscreens/WriteUs';
+
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
+const AuthStack = createNativeStackNavigator()
 
 
+const Tab = createMaterialBottomTabNavigator();
+const MainTabScreen = ({ navigaiton,route }) => {
+   console.log(route.name);
+  return (
+    <Tab.Navigator activeColor="#fff">
+
+      <Tab.Screen name="writetous" component={WriteUs} options={{
+        tabBarLabel: 'Bize Yazın', tabBarColor: '#009387',
+        tabBarIcon: ({ color }) => (
+          <Icon name="email" color={color} size={26} />
+        ),
+      }}
+      />
+
+      <Tab.Screen name="friends" component={Friends} options={{
+        tabBarVisible: false,
+        tabBarLabel: 'Arkadaşlar', tabBarColor: '#009387',
+        tabBarIcon: ({ color }) => (
+          <Icon name="account-group" color={color} size={26} />
+        ),
+      }}
+      />
+
+      <Tab.Screen name="statistics" component={Statistics} options={{
+        tabBarLabel: 'İstatistik', tabBarColor: '#009387',
+        tabBarIcon: ({ color }) => (
+          <Icon name="chart-areaspline" color={color} size={26} />
+        ),
+      }}
+      />
+
+      <Tab.Screen name="competitors" component={Competitors} options={{
+        tabBarLabel: 'Rakipler', tabBarColor: '#009387',
+        tabBarIcon: ({ color }) => (
+          <Icon name="license" color={color} size={26} />
+        ),
+      }}
+      />
+
+    </Tab.Navigator>
+  )
+
+};
 
 
-const AuthStack = createNativeStackNavigator();
-const AuthStackScreen = () => (
-  <AuthStack.Navigator>
-    <AuthStack.Screen
-      name="SignIn"
-      component={SignIn}
-      options={{ title: "Sign In" }}
-    />
-    <AuthStack.Screen
-      name="CreateAccount"
-      component={Register}
-      options={{ title: "Create Account" }}
-    />
-  </AuthStack.Navigator>
-);
-
-const HomeDrawer = createDrawerNavigator();
-const HomeDrawerScreen = () => (
-  <NavigationContainer ref={navigationRef}>
-    <HomeDrawer.Navigator initialRouteName="Welcome">
-      <HomeDrawer.Screen options={{ title: 'Lingomed', headerShown: false }} name="Register" component={Register} />
-      <HomeDrawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
-      <HomeDrawer.Screen options={{ title: 'Login', headerShown: false }} name="Login" component={Login} />
-      <HomeDrawer.Screen options={{ title: 'Forget your password', headerShown: false }} name="ForgetPassword" component={ForgetPassword} />
-    </HomeDrawer.Navigator>
-  </NavigationContainer>
-);
 
 
 function App() {
@@ -154,8 +185,6 @@ function App() {
   }, []);
 
 
-
-
   if (isLoading) {
     return (
       <View styleDrawer={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -164,22 +193,22 @@ function App() {
     )
   }
 
-
-  console.log(isLoading, isSignedIn, "isloading", "isSignedIn");
   return (
     <LangProvider>
       <AuthContext2.Provider value={authContext}>
         <NavigationContainer ref={navigationRef}>
           {isSignedIn ?
-            <Drawer.Navigator initialRouteName="Welcome">
+            <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
               <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
-              <Drawer.Screen options={{ title: 'signOut' }} name="signOut" component={Profile} />
+              <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
+              <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
+              <Drawer.Screen options={{ title: 'signOut' }} name="Profile" component={Profile} />
             </Drawer.Navigator>
             :
             <AuthStack.Navigator initialRouteName="Login">
-              <AuthStack.Screen options={{ title: 'Lingomed', headerShown: false}} name="Register" component={Register} />
+              <AuthStack.Screen options={{ title: 'Lingomed', headerShown: false }} name="Register" component={Register} />
               <AuthStack.Screen options={{ title: 'Login', headerShown: false }} name="Login" component={Login} />
-              <AuthStack.Screen options={{ title: 'Forget your password', headerShown: false}} name="ForgetPassword" component={ForgetPassword} />
+              <AuthStack.Screen options={{ title: 'Forget your password', headerShown: false }} name="ForgetPassword" component={ForgetPassword} />
             </AuthStack.Navigator>
           }
 

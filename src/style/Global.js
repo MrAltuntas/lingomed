@@ -1,3 +1,4 @@
+import React, { useContext } from 'react'
 import { StyleSheet} from 'react-native'
 
 const GlobalStyles = StyleSheet.create({
@@ -13,7 +14,7 @@ const GlobalStyles = StyleSheet.create({
         minHeight: '100%',
     },
     input: {
-        height: 50,
+        height: 60,
         width: '100%',
         margin: 0,
         borderWidth: 0,
@@ -28,18 +29,14 @@ const GlobalStyles = StyleSheet.create({
         margin: 5,
     },
     button: {
+        backgroundColor: '#075CAB',
         padding: 15,
         alignItems: 'center',
         borderRadius: 15,
         width: "100%",
         fontSize: 15,
-        margin: 15,
+        marginTop: 15,
     },
-    text: {
-        color: '#fff',
-        fontWeight: '700',
-        fontSize: 15
-    }
 });
 
 export default GlobalStyles
