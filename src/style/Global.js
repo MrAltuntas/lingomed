@@ -12,6 +12,7 @@ const GlobalStyles = StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 15,
         minHeight: '100%',
+        paddingBottom: 10
     },
     input: {
         height: 60,
@@ -37,6 +38,9 @@ const GlobalStyles = StyleSheet.create({
         fontSize: 15,
         marginTop: 15,
     },
+    text: {
+        color: "white"
+    }
 });
 
 export default GlobalStyles

@@ -1,21 +1,21 @@
 import React, { useState } from "react";
-import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
 import LinearGradient from '../components/LinearGradient';
 import GlobalStyles from '../style/Global';
-import FormSubmitButton from '../components/Forms/FormSubmitButton';
-import { RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
 import mainApi from '../api/mainApi';
-
+import useCollection from "../hooks/useCollection";
+import { API_URL } from '../../config'
+import { RadioButton } from 'react-native-paper';
+import FormSubmitButton from "../components/Forms/FormSubmitButton";
 const Welcome2 = ({ route }) => {
     const navigation = useNavigation();
     const { nativeLang } = route.params
-
-    const [targetLang, setTargetLang] = useState(nativeLang === "en" ? "tr" : "en")
     const [checked, setChecked] = React.useState("beginner");
+
+    const [targetLang, setTargetLang] = useState()
+    const [collectionApi, langs, errorMessage] = useCollection("lang")
 
     const handleSubmit = async (userInit) => {
 
@@ -34,50 +34,40 @@ const Welcome2 = ({ route }) => {
         }
     }
 
+    if (langs.length == 0) {
+        return (
+            <View styleDrawer={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <ActivityIndicator size="large" />
+            </View>
+        )
+    }
 
+    const result = langs.filter(lang => lang.symbol != nativeLang);
     return (
-        <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="false">
+        <View contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="false">
             <View style={GlobalStyles.container}>
                 <LinearGradient startPlace={1} endPlace={0} height={200} />
-                <View style={[styles.controlSpace]}>
-                    <Text style={styles.texttitle}>Hangi Dili Öğrenmek İstiyorsunuz</Text>
-                    {nativeLang == "tr" ?
-                        null
-                        :
-                        < TouchableOpacity style={styles.buttonView} onPress={() => setTargetLang("tr")}>
-                            <Image style={{ width: 93, height: 93 }, [targetLang == "tr" ? { opacity: 1 } : { opacity: 0.3 }]} source={require('../../assets/tr.png')} />
-                            <Text style={styles.text}>Türkçe</Text>
-                        </TouchableOpacity>
-                    }
-
-                    {nativeLang == "en" ?
-                        null
-                        :
-                        <TouchableOpacity style={styles.buttonView} onPress={() => setTargetLang("en")}>
-                            <Image style={{ width: 93, height: 93 }, [targetLang == "en" ? { opacity: 1 } : { opacity: 0.3 }]} source={require('../../assets/en.png')} />
-                            <Text style={styles.text}>English</Text>
-                        </TouchableOpacity>
-                    }
-
-                    {nativeLang == "de" ?
-                        null
-                        :
-                        <TouchableOpacity style={nativeLang == "ar" ? styles.buttonView2 : styles.buttonView} onPress={() => setTargetLang("de")}>
-                            <Image style={{ width: 93, height: 93 }, [targetLang == "de" ? { opacity: 1 } : { opacity: 0.3 }]} source={require('../../assets/de.png')} />
-                            <Text style={styles.text}>Deutsch</Text>
-                        </TouchableOpacity>
-                    }
-
-                    {nativeLang == "ar" ?
-                        null
-                        :
-                        <TouchableOpacity style={nativeLang != "ar" ? styles.buttonView2 : styles.buttonView} onPress={() => setTargetLang("ar")}>
-                            <Image style={{ width: 93, height: 93 }, [targetLang == "ar" ? { opacity: 1 } : { opacity: 0.3 }]} source={require('../../assets/ar.png')} />
-                            <Text style={styles.text}>عربى</Text>
-                        </TouchableOpacity>
-                    }
-
-                </View>
+                <Text style={styles.texttitle}>Hangi Dili Öğrenmek İstiyorsunuz</Text>
+                <FlatList
+                    data={result}
+                    horizontal={false}
+                    numColumns={2}
+                    ListHeaderComponent={null}
+                    ListFooterComponent={null}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(lang) => lang._id}
+                    renderItem={({ item }) => {
+                        return (
+                            < TouchableOpacity style={styles.buttonView} onPress={() => setTargetLang(item.symbol)}>
+                                {targetLang == item.symbol ?
+                                    <Image style={{ width: 93, height: 93, opacity: 1 }} source={{ uri: API_URL + item.img }} />
+                                    :
+                                    <Image style={{ width: 93, height: 93, opacity: 0.3 }} source={{ uri: API_URL + item.img }} />}
+                                <Text style={styles.text}>{item.name}</Text>
+                            </TouchableOpacity>
+                        )
+                    }}
+                />
                 <View style={{ flexDirection: "row" }}>
                     <RadioButton
                         value="beginner"
@@ -99,8 +89,9 @@ const Welcome2 = ({ route }) => {
                     <Text>İleri Düzey</Text>
                 </View>
                 <FormSubmitButton title='Seç ve Devam Et' onPress={() => handleSubmit({ targetLang, level: checked, nativeLang })} />
+
             </View>
-        </ScrollView >
+        </View >
     )
 }
 const styles = StyleSheet.create({
@@ -108,7 +99,7 @@ const styles = StyleSheet.create({
         color: '#075CAB',
         fontWeight: '500',
         fontSize: 20,
-        marginTop: 70,
+        marginTop: 15,
         marginBottom: 50,
         textAlign: 'center',
         width: '100%',
@@ -122,14 +113,7 @@ const styles = StyleSheet.create({
         width: '50%',
         padding: 10,
         alignItems: "center",
-        textAlign: 'center'
-    },
-    buttonView2: {
-        width: '50%',
-        padding: 10,
-        alignItems: "center",
         textAlign: 'center',
-        flex: 1
     },
     text: { textAlign: 'center', color: '#075CAB', fontSize: 15, margin: 10 },
 });

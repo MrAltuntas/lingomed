@@ -15,6 +15,10 @@ const DefaultLang = () => {
                 return en
             case "tr":
                 return tr
+            case "de":
+                return en
+            case "ar":
+                return en
 
             default:
                 return tr
@@ -25,7 +29,10 @@ const DefaultLang = () => {
                 return en
             case "tr":
                 return tr
-
+            case "de":
+                return en
+            case "ar":
+                return en
             default:
                 return tr
         }
