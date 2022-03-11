@@ -86,7 +86,7 @@ const ForgetPassword = (props) => {
                 </Formik>
 
                 <Text onPress={() => navigation.navigate("Login")} style={styles.title}>
-                    Giriş Yap
+                    Şifremi Unuttum
                 </Text>
             </View>
         </ScrollView>
