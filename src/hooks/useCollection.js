@@ -16,7 +16,6 @@ export default (collection) => {
             const response = await mainApi.get(`/data/getAccessible/${collection}`, config)
 
             if (response.data.success) {
-                console.log(response.data.data);
                 setResults(response.data.data)
             }else{
                 setErrorMessage('something went wrong')

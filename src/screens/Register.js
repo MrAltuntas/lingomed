@@ -82,7 +82,7 @@ const Register = (props) => {
                 {/* <Button title="login" onPress={() => navigation.navigate("Login")} /> */}
                 <View style={[styles.yho, { flexDirection: "row"}]}>                    
                 <Text onPress={() => navigation.navigate("Login")} style={[GlobalStyles.titlewhite,{ textAlign:'center' }]}>
-                    <Text>Hesabınız var mı?{'\n'}{'\n'}</Text>
+                    <Text>Kayıt Ol{'\n'}{'\n'}</Text>
                     <Text style={[styles.textorange, {textAlign:'center',marginTop:15}]}>Giriş Yap</Text>
                 </Text>
             </View>

@@ -12,7 +12,7 @@ const GlobalStyles = StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 15,
         minHeight: '100%',
-        paddingBottom: 10
+        paddingBottom: 10,
     },
     input: {
         height: 60,

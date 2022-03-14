@@ -43,7 +43,7 @@ export function DrawerContent(props) {
                             </View>
                         </View>
 
-                        <View style={styles.row}>
+                        {/* <View style={styles.row}>
                             <View style={styles.section}>
                                 <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
                                 <Caption style={styles.caption}>Following</Caption>
@@ -52,7 +52,7 @@ export function DrawerContent(props) {
                                 <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
                                 <Caption style={styles.caption}>Followers</Caption>
                             </View>
-                        </View>
+                        </View> */}
                     </View>
 
                     <Drawer.Section style={styles.drawerSection}>
@@ -64,10 +64,10 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Home"
+                            label="Ana sayfa"
                             onPress={() => {props.navigation.navigate('Welcome')}}
                         />
-                        <DrawerItem 
+                        {/* <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
                                 name="account-outline" 
@@ -77,8 +77,8 @@ export function DrawerContent(props) {
                             )}
                             label="Profile"
                             onPress={() => {props.navigation.navigate('Profile')}}
-                        />
-                        <DrawerItem 
+                        /> */}
+                         <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
                                 name="bookmark-outline" 
@@ -86,10 +86,10 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Bookmarks"
+                            label="Ekstra"
                             onPress={() => {props.navigation.navigate('Lessons')}}
                         />
-                        <DrawerItem 
+                        {/*<DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
                                 name="cog-outline" 
@@ -110,9 +110,9 @@ export function DrawerContent(props) {
                             )}
                             label="Support"
                             onPress={() => {props.navigation.navigate('SupportScreen')}}
-                        />
+                        /> */}
                     </Drawer.Section>
-                    <Drawer.Section title="Preferences">
+                    {/* <Drawer.Section title="Preferences">
                         <TouchableRipple onPress={() => {toggleTheme()}}>
                             <View style={styles.preference}>
                                 <Text>Dark Theme</Text>
@@ -121,7 +121,7 @@ export function DrawerContent(props) {
                                 </View>
                             </View>
                         </TouchableRipple>
-                    </Drawer.Section>
+                    </Drawer.Section> */}
                 </View>
             </DrawerContentScrollView>
             <Drawer.Section style={styles.bottomDrawerSection}>
@@ -133,7 +133,7 @@ export function DrawerContent(props) {
                         size={size}
                         />
                     )}
-                    label="Sign Out"
+                    label="Çıkış yap"
                     onPress={() => {signOut()}}
                 />
             </Drawer.Section>

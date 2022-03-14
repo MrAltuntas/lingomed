@@ -32,6 +32,10 @@ import Competitors from './src/screens/subscreens/Competitors';
 import Friends from './src/screens/subscreens/Friends';
 import Statistics from './src/screens/subscreens/Statistics';
 import WriteUs from './src/screens/subscreens/WriteUs';
+import Categories from './src/screens/Categories';
+
+// headers
+import HeaderWithBell from './src/headers/HeaderWithBell';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -40,7 +44,6 @@ const AuthStack = createNativeStackNavigator()
 
 const Tab = createMaterialBottomTabNavigator();
 const MainTabScreen = ({ navigaiton,route }) => {
-   console.log(route.name);
   return (
     <Tab.Navigator activeColor="#fff">
 
@@ -100,8 +103,6 @@ function App() {
       const response = await mainApi.post('/data/checkToken', {}, config)
 
       if (response.data.success) {
-        console.log("#################");
-
         setIsSignIn(true)
         setIsLoading(false)
       }
@@ -125,6 +126,8 @@ function App() {
           if (response.data.success) {
             try {
               await AsyncStorage.setItem("token", response.data.access_token)
+              await AsyncStorage.setItem("email", userInfo.email)
+
               setIsLoading(false);
               setIsSignIn(true)
 
@@ -198,11 +201,12 @@ function App() {
       <AuthContext2.Provider value={authContext}>
         <NavigationContainer ref={navigationRef}>
           {isSignedIn ?
-            <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+            <Drawer.Navigator screenOptions={{drawerPosition: "right",  header:({scene,navigation})=>(<HeaderWithBell />)}} drawerContent={props => <DrawerContent {...props} />}>
               <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
               <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
               <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
               <Drawer.Screen options={{ title: 'signOut' }} name="Profile" component={Profile} />
+              <Drawer.Screen options={{ title: 'Categories' }} name="Categories" component={Categories} />
             </Drawer.Navigator>
             :
             <AuthStack.Navigator initialRouteName="Login">
