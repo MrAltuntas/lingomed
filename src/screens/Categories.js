@@ -18,27 +18,24 @@ const Categories = () => {
     const contextLang = useContext(LangContext)
 
     const navigation = useNavigation();
-    const [nativeLang, setNativeLang] = useState(contextLang.state.lang);
     const [count, setCount]=useState(0);
     const [collectionApi, Categories, errorMessage] = useCollection("lessonsCategories")
-
+    
     const categoryNames = []
 
     Categories.map(category => {
         category.categoryNames.map(categoryName => {
-            if (categoryName.symbol == nativeLang) {
-                console.log(categoryName.name, "asdasd");
+            if (categoryName.symbol == contextLang.state.lang) {
                 let obj = {
                     name: categoryName.name,
-                    _id: categoryName._id
+                    _id: categoryName._id,
+                    categoryId: category._id
                 }
                 categoryNames.push(obj)
             }
         })
     })
-    console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-    console.log(categoryNames);
-    console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+    
     return (
         <View contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="false">
             <View style={GlobalStyles.container}>
@@ -49,9 +46,8 @@ const Categories = () => {
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(category) => category._id}
                     renderItem={({ item,index }) => {
-                        console.log(index);
                         return (
-                            <TouchableOpacity style={styles.buttonView} >
+                            <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate('Sentence', { categoryId: item.categoryId })}>
                                 <View style={styles.textCover}>
                                     <View style={{flexDirection:'row', flexWrap:'wrap'}}>
                                         <Badge style={{margin: 10, marginRight: 0, backgroundColor: "#ffff", borderColor: "#075CAB", borderWidth: 1,  color: "#075CAB"}}>{index+1}</Badge>

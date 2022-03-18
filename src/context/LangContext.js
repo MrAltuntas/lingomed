@@ -19,6 +19,10 @@ const DefaultLang = () => {
                 return en
             case "ar":
                 return en
+            case "ru":
+                return en
+            case "jp":
+                return en
 
             default:
                 return tr
@@ -33,6 +37,10 @@ const DefaultLang = () => {
                 return en
             case "ar":
                 return en
+            case "ru":
+                return en
+            case "jp":
+                return en
             default:
                 return tr
         }
@@ -43,11 +51,18 @@ const DefaultLang = () => {
 
 const langReducer = (state, action) => {
     switch (action.type) {
-        case 'en':
+        case "en":
             return en
-        case 'tr':
+        case "tr":
             return tr
-
+        case "de":
+            return en
+        case "ar":
+            return en
+        case "ru":
+            return en
+        case "jp":
+            return en
         default:
             return en
     }

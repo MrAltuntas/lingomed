@@ -4,10 +4,9 @@ import {MaterialCommunityIcons} from '@expo/vector-icons';
 import { StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const HeaderWithBell=()=>{
+const HeaderWithBell=({navigation})=>{
     // const {options}=scene.descriptor;
     // const title = navigation;
-    const navigation = useNavigation();
     
     return (
         <Appbar.Header style={styles.header}>

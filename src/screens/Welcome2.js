@@ -27,7 +27,7 @@ const Welcome2 = ({ route }) => {
         try {
             const response = await mainApi.post('/data/initUser', userInit, config)
             if (response.data.success == true) {
-                navigation.navigate('Categories')
+                navigation.navigate('MainStackScreen')
             }
         } catch (error) {
             console.log(error.response);

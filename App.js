@@ -25,7 +25,7 @@ import ForgetPassword from './src/screens/ForgetPassword'
 import Register from './src/screens/Register';
 import Welcome from './src/screens/Welcome';
 import Welcome2 from './src/screens/Welcome2';
-
+import Sentence from './src/screens/Sentence';
 
 //sub screens
 import Competitors from './src/screens/subscreens/Competitors';
@@ -85,6 +85,15 @@ const MainTabScreen = ({ navigaiton,route }) => {
 
 };
 
+
+const MainStackScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="Categories" screenOptions={{drawerPosition: "right",  header:({scene,navigation})=>(<HeaderWithBell navigation={navigation} />)}}>
+      <Stack.Screen options={{ title: 'Categories'}} name="Categories" component={Categories} />
+      <Stack.Screen options={{ title: 'Sentence'}} name="Sentence" component={Sentence} />
+    </Stack.Navigator>
+  );
+}
 
 
 
@@ -201,12 +210,12 @@ function App() {
       <AuthContext2.Provider value={authContext}>
         <NavigationContainer ref={navigationRef}>
           {isSignedIn ?
-            <Drawer.Navigator screenOptions={{drawerPosition: "right",  header:({scene,navigation})=>(<HeaderWithBell />)}} drawerContent={props => <DrawerContent {...props} />}>
+            <Drawer.Navigator screenOptions={{drawerPosition: "right",  header:({scene,navigation})=>(<HeaderWithBell navigation={navigation} />)}} drawerContent={props => <DrawerContent {...props} />}>
               <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
               <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
               <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
               <Drawer.Screen options={{ title: 'signOut' }} name="Profile" component={Profile} />
-              <Drawer.Screen options={{ title: 'Categories' }} name="Categories" component={Categories} />
+              <Drawer.Screen options={{ title: 'Categories', headerShown: false}} name="MainStackScreen" component={MainStackScreen} />
             </Drawer.Navigator>
             :
             <AuthStack.Navigator initialRouteName="Login">

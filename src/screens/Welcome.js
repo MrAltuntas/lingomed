@@ -17,9 +17,14 @@ const Welcome = () => {
 
     const navigation = useNavigation();
     const [nativeLang, setNativeLang] = useState(contextLang.state.lang);
+
     const [collectionApi, langs, errorMessage] = useCollection("lang")
     
 
+    const handleLangChange = (lang) => {
+        contextLang.changeLang(lang)
+        setNativeLang(lang)
+    }
     return (
         <View contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="false">
             <View style={GlobalStyles.container}>
@@ -35,7 +40,7 @@ const Welcome = () => {
                         ListFooterComponent={null}
                         renderItem={({ item }) => {
                             return (
-                                <TouchableOpacity  style={styles.buttonView} onPress={() => setNativeLang(item.symbol)}>
+                                <TouchableOpacity  style={styles.buttonView} onPress={() => handleLangChange(item.symbol)}>
                                     {nativeLang == item.symbol ? 
                                     <Image style={{ width: 93, height: 93, opacity: 1 }} source={{ uri: API_URL+item.img }} />
                                     :
