@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Text, StyleSheet, Button, Pressable, ScrollView, View, Image } from 'react-native'
 
 import { Context as LangContext } from '../../src/context/LangContext'
@@ -15,6 +15,8 @@ import LinearGradient from '../components/LinearGradient';
 
 import GlobalStyles from '../style/Global';
 
+import SetLang from '../helpers/SetLang';
+
 let validationSchema = yup.object().shape({
     email: yup.string().email('Invalid email!').required('Email is required!'),
     password: yup.string().trim().min(6, 'Password is too short!').required('password is required!'),
@@ -29,6 +31,10 @@ const Login = (props) => {
     const navigation = useNavigation();
 
     console.log(contextLang.state.merhaba);
+
+    useEffect(async () => {
+        await SetLang(contextLang)
+    }, [])
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">

@@ -18,6 +18,8 @@ const Welcome2 = ({ route }) => {
     const [collectionApi, langs, errorMessage] = useCollection("lang")
 
     const handleSubmit = async (userInit) => {
+        await AsyncStorage.setItem("targetLang", userInit.targetLang)
+        await AsyncStorage.setItem("nativeLang", userInit.nativeLang)
 
         const token = await AsyncStorage.getItem("token");
         const config = {
@@ -44,10 +46,12 @@ const Welcome2 = ({ route }) => {
 
     const result = langs.filter(lang => lang.symbol != nativeLang);
     return (
-        <View contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="false">
-            <View style={GlobalStyles.container}>
-                <LinearGradient startPlace={1} endPlace={0} height={200} />
+        <View style={styles.container}>
+            <View style={{ flex: 1 }}>
                 <Text style={styles.texttitle}>Hangi Dili Öğrenmek İstiyorsunuz</Text>
+            </View>
+            <View style={{ flex: 4 }}>
+
                 <FlatList
                     data={result}
                     horizontal={false}
@@ -68,33 +72,39 @@ const Welcome2 = ({ route }) => {
                         )
                     }}
                 />
-                <View style={{ flexDirection: "row" }}>
-                    <RadioButton
+                <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
+                    <RadioButton color="#075CAB"
                         value="beginner"
                         status={checked === 'beginner' ? 'checked' : 'unchecked'}
                         onPress={() => setChecked('beginner')}
                     />
-                    <Text>Başlagıç</Text>
-                    <RadioButton
+                    <Text style={styles.rtext}>Başlagıç</Text>
+                    <RadioButton color="#075CAB"
                         value="intermediate"
                         status={checked === 'intermediate' ? 'checked' : 'unchecked'}
                         onPress={() => setChecked('intermediate')}
                     />
-                    <Text>Orta Düzey</Text>
-                    <RadioButton
+                    <Text style={styles.rtext}>Orta Düzey</Text>
+                    <RadioButton color="#075CAB"
                         value="advanced"
                         status={checked === 'advanced' ? 'checked' : 'unchecked'}
                         onPress={() => setChecked('advanced')}
                     />
-                    <Text>İleri Düzey</Text>
+                    <Text style={styles.rtext}>İleri Düzey</Text>
                 </View>
+            </View>
+            <View style={{ flex: 1, justifyContent: "center" }}>
                 <FormSubmitButton title='Seç ve Devam Et' onPress={() => handleSubmit({ targetLang, level: checked, nativeLang })} />
-
             </View>
         </View >
     )
 }
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#C5EBFE',
+    },
     texttitle: {
         color: '#075CAB',
         fontWeight: '500',
@@ -103,6 +113,10 @@ const styles = StyleSheet.create({
         marginBottom: 50,
         textAlign: 'center',
         width: '100%',
+    },
+    rtext: {
+        color: '#505050',
+        margin: 8,
     },
     controlSpace: {
         flexDirection: 'row',

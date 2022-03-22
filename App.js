@@ -43,7 +43,7 @@ const AuthStack = createNativeStackNavigator()
 
 
 const Tab = createMaterialBottomTabNavigator();
-const MainTabScreen = ({ navigaiton,route }) => {
+const MainTabScreen = ({ navigaiton, route }) => {
   return (
     <Tab.Navigator activeColor="#fff">
 
@@ -88,9 +88,9 @@ const MainTabScreen = ({ navigaiton,route }) => {
 
 const MainStackScreen = () => {
   return (
-    <Stack.Navigator initialRouteName="Categories" screenOptions={{drawerPosition: "right",  header:({scene,navigation})=>(<HeaderWithBell navigation={navigation} />)}}>
-      <Stack.Screen options={{ title: 'Categories'}} name="Categories" component={Categories} />
-      <Stack.Screen options={{ title: 'Sentence'}} name="Sentence" component={Sentence} />
+    <Stack.Navigator initialRouteName="Categories" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }}>
+      <Stack.Screen options={{ title: 'Categories' }} name="Categories" component={Categories} />
+      <Stack.Screen options={{ title: 'Sentence' }} name="Sentence" component={Sentence} />
     </Stack.Navigator>
   );
 }
@@ -100,11 +100,15 @@ const MainStackScreen = () => {
 function App() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSignedIn, setIsSignIn] = useState(false)
+  const [isUserInit, setUserInit] = useState(false)
 
 
   useEffect(async () => {
 
     const token = await AsyncStorage.getItem("token");
+    const isUserInit = await AsyncStorage.getItem("targetLang");
+    setUserInit(isUserInit)
+
     const config = {
       headers: { Authorization: `Arflok: ${token}` }
     };
@@ -209,13 +213,21 @@ function App() {
     <LangProvider>
       <AuthContext2.Provider value={authContext}>
         <NavigationContainer ref={navigationRef}>
-          {isSignedIn ?
-            <Drawer.Navigator screenOptions={{drawerPosition: "right",  header:({scene,navigation})=>(<HeaderWithBell navigation={navigation} />)}} drawerContent={props => <DrawerContent {...props} />}>
+          {isSignedIn ? isUserInit ?
+            <Drawer.Navigator initialRouteName="MainStackScreen" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }} drawerContent={props => <DrawerContent {...props} />}>
               <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
               <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
               <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
               <Drawer.Screen options={{ title: 'signOut' }} name="Profile" component={Profile} />
-              <Drawer.Screen options={{ title: 'Categories', headerShown: false}} name="MainStackScreen" component={MainStackScreen} />
+              <Drawer.Screen options={{ title: 'Categories', headerShown: false }} name="MainStackScreen" component={MainStackScreen} />
+            </Drawer.Navigator>
+            :
+            <Drawer.Navigator initialRouteName="Welcome" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }} drawerContent={props => <DrawerContent {...props} />}>
+              <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
+              <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
+              <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
+              <Drawer.Screen options={{ title: 'signOut' }} name="Profile" component={Profile} />
+              <Drawer.Screen options={{ title: 'Categories', headerShown: false }} name="MainStackScreen" component={MainStackScreen} />
             </Drawer.Navigator>
             :
             <AuthStack.Navigator initialRouteName="Login">

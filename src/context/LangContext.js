@@ -1,13 +1,14 @@
 import createDataContext from './createDataContext';
 import { NativeModules, Platform } from 'react-native'
+
+
 const en = require('../lang/en.json');
 const tr = require('../lang/tr.json');
 
-
 console.log("firsttt lang");
 
-
 const DefaultLang = () => {
+
     if (Platform.OS === "android") {
 
         switch (NativeModules.I18nManager.localeIdentifier.split("_")[0]) {
@@ -46,7 +47,6 @@ const DefaultLang = () => {
         }
     }
 }
-
 
 
 const langReducer = (state, action) => {

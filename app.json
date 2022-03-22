@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "lingomed",
+    "name": "Lingomed",
     "slug": "lingomed",
     "version": "1.0.0",
     "orientation": "portrait",
+    "owner": "medyator-interaktif",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",

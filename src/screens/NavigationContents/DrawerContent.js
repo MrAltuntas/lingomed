@@ -65,7 +65,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label="Ana sayfa"
-                            onPress={() => {props.navigation.navigate('Welcome')}}
+                            onPress={() => {props.navigation.navigate('MainStackScreen')}}
                         />
                         {/* <DrawerItem 
                             icon={({color, size}) => (

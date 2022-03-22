@@ -9,7 +9,7 @@ import FormSubmitButton from '../components/Forms/FormSubmitButton';
 
 import { useNavigation } from '@react-navigation/native';
 import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
-import {API_URL} from '../../config'
+import { API_URL } from '../../config'
 import useCollection from "../hooks/useCollection";
 
 const Welcome = () => {
@@ -19,51 +19,62 @@ const Welcome = () => {
     const [nativeLang, setNativeLang] = useState(contextLang.state.lang);
 
     const [collectionApi, langs, errorMessage] = useCollection("lang")
-    
+
 
     const handleLangChange = (lang) => {
         contextLang.changeLang(lang)
         setNativeLang(lang)
     }
+
     return (
-        <View contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="false">
-            <View style={GlobalStyles.container}>
-                <LinearGradient startPlace={1} endPlace={0} height={200} />
+        <View style={styles.container}>
+            <View style={{ flex: 1 }}>
                 <Text style={styles.texttitle}>Ana dilinizi seçiniz</Text>
+            </View>
+            <View style={{ flex: langs.length-1 }}>
                 <FlatList
-                        data={langs}
-                        horizontal={false}
-                        numColumns={2}
-                        showsHorizontalScrollIndicator={false}
-                        keyExtractor={(lang) => lang._id}
-                        ListHeaderComponent={null}
-                        ListFooterComponent={null}
-                        renderItem={({ item }) => {
-                            return (
-                                <TouchableOpacity  style={styles.buttonView} onPress={() => handleLangChange(item.symbol)}>
-                                    {nativeLang == item.symbol ? 
-                                    <Image style={{ width: 93, height: 93, opacity: 1 }} source={{ uri: API_URL+item.img }} />
+                    data={langs}
+                    horizontal={false}
+                    numColumns={2}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(lang) => lang._id}
+                    ListHeaderComponent={null}
+                    ListFooterComponent={null}
+                    renderItem={({ item }) => {
+                        return (
+                            <TouchableOpacity style={styles.buttonView} onPress={() => handleLangChange(item.symbol)}>
+                                {nativeLang == item.symbol ?
+                                    <Image style={{ width: 93, height: 93, opacity: 1 }} source={{ uri: API_URL + item.img }} />
                                     :
-                                    <Image style={{ width: 93, height: 93, opacity: 0.3 }} source={{ uri: API_URL+item.img }} />}
-                                    <Text style={styles.text}>{item.name}</Text>
-                                </TouchableOpacity>
-                            )
-                        }}
-                    />
-                    <FormSubmitButton title='Seç ve Devam Et' onPress={() => navigation.navigate('Welcome2', { nativeLang: nativeLang })} />
+                                    <Image style={{ width: 93, height: 93, opacity: 0.3 }} source={{ uri: API_URL + item.img }} />}
+                                <Text style={styles.text}>{item.name}</Text>
+                            </TouchableOpacity>
+                        )
+                    }}
+                />
+            </View>
+            <View style={{ flex: 1 }}>
+                <FormSubmitButton title='Seç ve Devam Et' onPress={() => navigation.navigate('Welcome2', { nativeLang: nativeLang })} />
             </View>
         </View>
     )
 }
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#C5EBFE',
+    },
     texttitle: {
         color: '#075CAB',
         fontWeight: '500',
         fontSize: 20,
         marginTop: 10,
-        marginBottom: 50,
         textAlign: 'center',
         width: '100%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     controlSpace: {
         flexDirection: 'row',
