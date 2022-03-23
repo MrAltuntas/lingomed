@@ -1,1 +1,1 @@
-export const API_URL = "https://service.borubukmemakinasi.com"
+export const API_URL = "http://192.168.0.21:5001"

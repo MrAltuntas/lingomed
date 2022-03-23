@@ -26,6 +26,7 @@ import Register from './src/screens/Register';
 import Welcome from './src/screens/Welcome';
 import Welcome2 from './src/screens/Welcome2';
 import Sentence from './src/screens/Sentence';
+import Question from './src/screens/Quesetion';
 
 //sub screens
 import Competitors from './src/screens/subscreens/Competitors';
@@ -91,6 +92,8 @@ const MainStackScreen = () => {
     <Stack.Navigator initialRouteName="Categories" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }}>
       <Stack.Screen options={{ title: 'Categories' }} name="Categories" component={Categories} />
       <Stack.Screen options={{ title: 'Sentence' }} name="Sentence" component={Sentence} />
+      <Stack.Screen options={{ title: 'Question' }} name="Question" component={Question} />
+      <Stack.Screen options={{ title: 'Profile' }} name="Profile" component={Profile} />
     </Stack.Navigator>
   );
 }
@@ -218,7 +221,6 @@ function App() {
               <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
               <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
               <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
-              <Drawer.Screen options={{ title: 'signOut' }} name="Profile" component={Profile} />
               <Drawer.Screen options={{ title: 'Categories', headerShown: false }} name="MainStackScreen" component={MainStackScreen} />
             </Drawer.Navigator>
             :
@@ -226,7 +228,6 @@ function App() {
               <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
               <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
               <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
-              <Drawer.Screen options={{ title: 'signOut' }} name="Profile" component={Profile} />
               <Drawer.Screen options={{ title: 'Categories', headerShown: false }} name="MainStackScreen" component={MainStackScreen} />
             </Drawer.Navigator>
             :

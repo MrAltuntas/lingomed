@@ -65,9 +65,9 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label="Ana sayfa"
-                            onPress={() => {props.navigation.navigate('MainStackScreen')}}
+                            onPress={() => {props.navigation.navigate('Categories')}}
                         />
-                        {/* <DrawerItem 
+                        <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
                                 name="account-outline" 
@@ -77,7 +77,8 @@ export function DrawerContent(props) {
                             )}
                             label="Profile"
                             onPress={() => {props.navigation.navigate('Profile')}}
-                        /> */}
+                        />
+                        
                          <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
