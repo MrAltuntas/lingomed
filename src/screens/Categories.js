@@ -49,7 +49,7 @@ const Categories = () => {
             {/* <LinearGradient startPlace={1} endPlace={0} height={200} /> */}
 
             <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30, }}>
-                <Text style={styles.texttitle}>Dersler</Text>
+                <Text style={styles.texttitle}>{contextLang.state.lessons}</Text>
             </View>
             <View style={{ flex: 4, padding: 20, flexDirection: "row" }}>
 
@@ -59,7 +59,7 @@ const Categories = () => {
                     keyExtractor={(category) => category._id}
                     renderItem={({ item, index }) => {
                         return (
-                            <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate('Sentence', { categoryId: item.categoryId })}>
+                            <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate('Sentence', { categoryId: item.categoryId, categoryName: item.name})}>
                                 <View style={styles.textCover}>
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                                         <Badge style={{ margin: 10, marginRight: 0, backgroundColor: "#ffff", borderColor: "#075CAB", borderWidth: 1, color: "#075CAB" }}>{index + 1}</Badge>
@@ -72,7 +72,7 @@ const Categories = () => {
                 />
             </View>
 
-            <LingomedBottomMenu />
+            <LingomedBottomMenu contextLang={contextLang} navigation={navigation}/>
 
         </View>
     )
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     textCover: {
-        width: "80%",
+        width: "100%",
         height: 50,
         backgroundColor: "#ffff",
         borderRadius: 10,

@@ -18,8 +18,8 @@ import GlobalStyles from '../style/Global';
 import SetLang from '../helpers/SetLang';
 
 let validationSchema = yup.object().shape({
-    email: yup.string().email('Invalid email!').required('Email is required!'),
-    password: yup.string().trim().min(6, 'Password is too short!').required('password is required!'),
+    email: yup.string().email('Mail adresi yanlış!').required('Mail adresi giriniz!'),
+    password: yup.string().trim().min(6, 'Şifre çok kısa!').required('Şifre giriniz!'),
 });
 
 const Login = (props) => {
@@ -52,6 +52,7 @@ const Login = (props) => {
                                     style={GlobalStyles.input}
                                     placeholder="E-posta Adresiniz"
                                     keyboardType={"email-address"}
+                                    autoCapitalize={"none"}
                                     placeholderTextColor="#9D9FA0"
                                     error={errors.email}
                                     onChangeText={handleChange("email")} />
@@ -61,12 +62,13 @@ const Login = (props) => {
                                     placeholder="Şifreniz"
                                     placeholderTextColor="#9D9FA0"
                                     error={errors.password}
+                                    autoCapitalize={"none"}
                                     secureTextEntry={true}
                                     onChangeText={handleChange("password")} />
 
                                 <FormSubmitButton
                                     onPress={handleSubmit}
-                                    title='Giriş Yap' />
+                                    title='GİRİŞ YAP' />
 
 
                                 {/* {state.errorMessage ? <Text>{state.errorMessage}</Text> : null} */}
@@ -75,7 +77,7 @@ const Login = (props) => {
                     }}
                 </Formik>
                 <Text onPress={() => navigation.navigate("ForgetPassword")} style={styles.title}>
-                    Şifrenizi mi unuttunuz?
+                    Şifremi unuttum
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>

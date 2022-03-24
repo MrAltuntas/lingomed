@@ -9,13 +9,16 @@ import { API_URL } from '../../config'
 import LingomedBottomMenu from "../components/NavigationMenus/BottomMenu/LingomedBottomMenu";
 import { Audio } from 'expo-av';
 import mainApi from "../api/mainApi";
+
+import { Button, Paragraph, Dialog, Portal, Provider } from 'react-native-paper';
+
 const Sentence = ({ route }) => {
     const [collectionApi, sentences, errorMessage] = useCollection("sentences")
     const contextLang = useContext(LangContext)
     const navigation = useNavigation();
     const [targetLang, setTargetLang] = useState("en")
     const [modalVisible, setModalVisible] = useState(false);
-    const { categoryId } = route.params
+    const { categoryId, categoryName } = route.params
     const [hiddenCount, setHiddenCount] = useState(0)
     const [sound, setSound] = useState();
 
@@ -71,7 +74,7 @@ const Sentence = ({ route }) => {
             const response = await mainApi.post(`/data/pushData/users/${email}/likedSentences`, { likedSentenceId: selection[hiddenCount]._id, targetLangSymbol: selection[hiddenCount].symbol, symbol: contextLang.state.lang, sentence: selection[hiddenCount].sentence }, config)
 
             if (response.data.success) {
-                alert("Favori Cümlelere Eklendi")
+                setVisible(true)
                 console.log("eklendi");
             }
 
@@ -82,106 +85,125 @@ const Sentence = ({ route }) => {
     }
 
 
+    const [visible, setVisible] = React.useState(false);
+    const showDialog = () => setVisible(true);
+    const hideDialog = () => setVisible(false);
+
     return (
-        <View style={styles.container}>
-            <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30, }}>
-                <Text style={styles.texttitle}>Dersler / Kategori ismi 1</Text>
-            </View>
-            <View style={styles.fview}>
-                <FlatList style={{ width: "100%" }}
-                    data={selection}
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(select) => select._id}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <>
-                                {index == hiddenCount ?
-                                    <View hidden={true} style={{ paddingTop: 20 }}>
-                                        <ImageBackground source={{ uri: API_URL + item.img }} imageStyle={styles.br10} resizeMode="stretch" style={styles.bosimage}>
-                                            <View style={styles.soundicon1}>
-                                                <View style={styles.soundiconcircle} >
-                                                    <TouchableOpacity onPress={() => playSound(API_URL + item.audio)} style={styles.mt14}><Image source={require('../../assets/sound.png')} /></TouchableOpacity>
+        <Provider>
+            <View style={styles.container}>
+                <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30, }}>
+                    <Text style={styles.texttitle}>{contextLang.state.lessons} / {categoryName}</Text>
+                </View>
+                <View style={styles.fview}>
+                    <FlatList style={{ width: "100%" }}
+                        data={selection}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(select) => select._id}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <>
+                                    {index == hiddenCount ?
+                                        <View hidden={true} style={{ paddingTop: 20 }}>
+                                            <ImageBackground source={{ uri: API_URL + item.img }} imageStyle={styles.br10} resizeMode="stretch" style={styles.bosimage}>
+                                                <View style={styles.soundicon1}>
+                                                    <View style={styles.soundiconcircle} >
+                                                        <TouchableOpacity onPress={() => playSound(API_URL + item.audio)} style={styles.mt14}><Image source={require('../../assets/sound.png')} /></TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                            </ImageBackground>
+                                            <View style={styles.textview}>
+                                                <Text style={styles.text1}>{item.sentence}</Text>
+                                                <Text style={styles.text2}>{item.translations.filter(translation => translation.symbol == contextLang.state.lang)[0].sentence}</Text>
+                                                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+
+                                                    {item.dailySentence.split(" ").map(sentence => {
+
+                                                        if (sentence.includes("incontinent")) {
+                                                            return (<TouchableOpacity key={sentence} onPress={() => setModalVisible(!modalVisible)}><Text style={styles.text3}>{sentence} </Text></TouchableOpacity>)
+                                                        }
+                                                        return (<Text key={sentence} style={styles.text4}>{sentence} </Text>)
+
+                                                    })}
                                                 </View>
                                             </View>
-                                        </ImageBackground>
-                                        <View style={styles.textview}>
-                                            <Text style={styles.text1}>{item.sentence}</Text>
-                                            <Text style={styles.text2}>{item.translations.filter(translation => translation.symbol == contextLang.state.lang)[0].sentence}</Text>
-                                            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
 
-                                                {item.dailySentence.split(" ").map(sentence => {
+                                            <Modal
+                                                animationType="fade"
+                                                transparent={true}
+                                                visible={modalVisible}
+                                                onRequestClose={() => {
+                                                    Alert.alert("Modal has been closed.");
+                                                    setModalVisible(!modalVisible);
+                                                }}
+                                            >
+                                                <View style={styles.centeredView}>
+                                                    <View style={styles.modalView}>
 
-                                                    if (sentence.includes("incontinent")) {
-                                                        return (<TouchableOpacity key={sentence} onPress={() => setModalVisible(!modalVisible)}><Text style={styles.text3}>{sentence} </Text></TouchableOpacity>)
-                                                    }
-                                                    return (<Text key={sentence} style={styles.text4}>{sentence} </Text>)
+                                                        <Text style={styles.modalText}>incontinent</Text>
+                                                        <Text style={styles.modalText2}>idrarını tutamayan</Text>
+                                                        <Text style={styles.modalText2}>iradesiz</Text>
 
-                                                })}
-                                            </View>
-                                        </View>
-
-                                        <Modal
-                                            animationType="fade"
-                                            transparent={true}
-                                            visible={modalVisible}
-                                            onRequestClose={() => {
-                                                Alert.alert("Modal has been closed.");
-                                                setModalVisible(!modalVisible);
-                                            }}
-                                        >
-                                            <View style={styles.centeredView}>
-                                                <View style={styles.modalView}>
-
-                                                    <Text style={styles.modalText}>incontinent</Text>
-                                                    <Text style={styles.modalText2}>idrarını tutamayan</Text>
-                                                    <Text style={styles.modalText2}>iradesiz</Text>
-
-                                                    <View style={styles.bottomContainer}>
-                                                        <View style={styles.popupwp}>
-                                                            <View>
-                                                                <Image style={styles.popupimage} source={require('../../assets/soundyellow.png')} />
-                                                            </View>
-                                                            <View>
-                                                                <Image style={styles.popupimage} source={require('../../assets/begen.png')} />
+                                                        <View style={styles.bottomContainer}>
+                                                            <View style={styles.popupwp}>
+                                                                <View>
+                                                                    <Image style={styles.popupimage} source={require('../../assets/soundyellow.png')} />
+                                                                </View>
+                                                                <View>
+                                                                    <Image style={styles.popupimage} source={require('../../assets/begen.png')} />
+                                                                </View>
                                                             </View>
                                                         </View>
+                                                        <Pressable
+                                                            style={styles.closecircle}
+                                                            onPress={() => setModalVisible(!modalVisible)}
+                                                        >
+                                                            <Text style={styles.closecircletext}>X</Text>
+                                                        </Pressable>
                                                     </View>
-                                                    <Pressable
-                                                        style={styles.closecircle}
-                                                        onPress={() => setModalVisible(!modalVisible)}
-                                                    >
-                                                        <Text style={styles.closecircletext}>X</Text>
-                                                    </Pressable>
                                                 </View>
-                                            </View>
-                                        </Modal>
+                                            </Modal>
 
-                                        <TouchableOpacity onPress={() => navigation.navigate("Question")} >
-                                            <Text style={{ textAlign: "center", marginTop: 25 }}>Quiz Sayfasına Geç</Text>
-                                        </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => navigation.navigate("Question")} >
+                                                <Text style={{ textAlign: "center", marginTop: 25 }}>Quiz Sayfasına Geç</Text>
+                                            </TouchableOpacity>
 
-                                    </View>
-                                    : null}
+                                        </View>
+                                        : null}
 
-                            </>
-                        )
-                    }}
-                />
+                                </>
+                            )
+                        }}
+                    />
+                </View>
+                <View style={styles.bottomContainer}>
+                    <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
+                        <TouchableOpacity style={styles.footerview}>
+                            <Image style={styles.footerimage} source={require('../../assets/soundyellow.png')} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
+                            <Image style={styles.footerimage} source={require('../../assets/change.png')} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.footerview} onPress={() => like()}>
+                            <Image style={styles.footerimage} source={require('../../assets/begen.png')} />
+                        </TouchableOpacity>
+                    </ImageBackground>
+                </View>
+
+
+                <Portal>
+                    <Dialog visible={visible} onDismiss={hideDialog}>
+                        <Dialog.Title>Favori</Dialog.Title>
+                        <Dialog.Content>
+                            <Paragraph>{contextLang.state.addedToFavori}</Paragraph>
+                        </Dialog.Content>
+                        <Dialog.Actions>
+                            <Button onPress={hideDialog}>Ok</Button>
+                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
             </View>
-            <View style={styles.bottomContainer}>
-                <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
-                    <TouchableOpacity style={styles.footerview}>
-                        <Image style={styles.footerimage} source={require('../../assets/soundyellow.png')} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
-                        <Image style={styles.footerimage} source={require('../../assets/change.png')} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.footerview} onPress={() => like()}>
-                        <Image style={styles.footerimage} source={require('../../assets/begen.png')} />
-                    </TouchableOpacity>
-                </ImageBackground>
-            </View>
-        </View>
+        </Provider>
     )
 }
 

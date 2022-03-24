@@ -2,26 +2,26 @@ import React, { useContext, useState, useEffect } from "react";
 import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator, ImageBackground } from 'react-native'
 
 
-const LingomedBottomMenu = () => {
+const LingomedBottomMenu = ({navigation, contextLang}) => {
     return (
         <View style={styles.bottomContainer}>
             <ImageBackground source={require('../../../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
-                <View style={styles.footerview}>
+                <TouchableOpacity style={styles.footerview} onPress={() => navigation.navigate("writetous")}>
                     <Image style={styles.footerimage} source={require('../../../../assets/bizeyazin.png')} />
-                    <Text style={styles.footertext}>Bize Yazın</Text>
-                </View>
-                <View style={styles.footerview}>
+                    <Text style={styles.footertext}>{contextLang.state.writeToUs}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.footerview} onPress={() => navigation.navigate("friends")}>
                     <Image style={styles.footerimage} source={require('../../../../assets/arkadaslar.png')} />
                     <Text style={styles.footertext}>Arkadaşlar</Text>
-                </View>
-                <View style={styles.footerview}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.footerview} onPress={() => navigation.navigate("statistics")}>
                     <Image style={styles.footerimage} source={require('../../../../assets/istatistik.png')} />
                     <Text style={styles.footertext}>İstatistik</Text>
-                </View>
-                <View style={styles.footerview}>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.footerview} onPress={() => navigation.navigate("competitors")}>
                     <Image style={styles.footerimage} source={require('../../../../assets/rakipler.png')} />
                     <Text style={styles.footertext}>Rakipler</Text>
-                </View>
+                </TouchableOpacity>
             </ImageBackground>
         </View>
     )

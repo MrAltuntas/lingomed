@@ -7,5 +7,20 @@
     "yorumlar":"Reviews",
     "luks":"Luxury",
     "ortaSinif":"Nice",
-    "ekonomik":"Economy"
+    "ekonomik":"Economy",
+
+    "lessons":"Lessons",
+    "writeToUs":"Write To Us",
+    "friends":"Friends",
+    "statistics":"Statistics",
+    "competitors":"Competitors",
+    "addedToFavori":"Sentence added to favories!",
+    "save":"Save",
+    "selectLang":"Select Language : ",
+    "voiceEffect": "Voice Effect",
+    "autoPlay":"Auto play",
+    "homePage":"Home Page",
+    "profile":"Profile",
+    "logOut":"Logout"
+
 }

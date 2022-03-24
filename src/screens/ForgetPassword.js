@@ -74,12 +74,13 @@ const ForgetPassword = (props) => {
                                     style={GlobalStyles.input}
                                     placeholder="Email"
                                     keyboardType={"email-address"}
+                                    autoCapitalize={"none"}
                                     error={errors.email}
                                     onChangeText={handleChange("email")} />
 
                                 <FormSubmitButton
                                     onPress={handleSubmit}
-                                    title='Şifremi Unuttum' />
+                                    title='ŞİFREMİ UNUTTUM' />
                             </>
                         )
                     }}

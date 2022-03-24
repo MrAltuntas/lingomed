@@ -19,9 +19,11 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext2 } from '../../context/AuthContext2'
 
+import { Context as LangContext } from '../../context/LangContext'
 
 export function DrawerContent(props) {
     const { signOut } = useContext(AuthContext2)
+    const contextLang = useContext(LangContext)
 
     const paperTheme = useTheme();
 
@@ -64,7 +66,7 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Ana sayfa"
+                            label={contextLang.state.homePage}
                             onPress={() => {props.navigation.navigate('Categories')}}
                         />
                         <DrawerItem 
@@ -75,11 +77,11 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Profile"
+                            label={contextLang.state.profile}
                             onPress={() => {props.navigation.navigate('Profile')}}
                         />
                         
-                         <DrawerItem 
+                         {/* <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
                                 name="bookmark-outline" 
@@ -89,7 +91,7 @@ export function DrawerContent(props) {
                             )}
                             label="Ekstra"
                             onPress={() => {props.navigation.navigate('Lessons')}}
-                        />
+                        /> */}
                         {/*<DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
@@ -134,7 +136,7 @@ export function DrawerContent(props) {
                         size={size}
                         />
                     )}
-                    label="Çıkış yap"
+                    label={contextLang.state.logOut}
                     onPress={() => {signOut()}}
                 />
             </Drawer.Section>

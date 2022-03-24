@@ -15,10 +15,10 @@ import LinearGradient from '../components/LinearGradient';
 import GlobalStyles from '../style/Global';
 
 let validationSchema = yup.object().shape({
-    fullName: yup.string().trim().min(3, 'Invalid name!').required('Name is required!'),
-    email: yup.string().email('Invalid email!').required('Email is required!'),
-    password: yup.string().trim().min(6, 'Password is too short!').required('password is required!'),
-    confirmPassword: yup.string().equals([yup.ref('password'), null], "Does not match with password!"),
+    fullName: yup.string().trim().min(3, 'İsiminizi kontrol ediniz!').required('İsim giriniz!'),
+    email: yup.string().email('Mailinizi kontrol ediniz!').required('Mail giriniz!'),
+    password: yup.string().trim().min(6, 'Şifreniz çok kısa!').required('Şifre giriniz!'),
+    confirmPassword: yup.string().equals([yup.ref('password'), null], "Şifre eşleşmiyor!"),
 });
 
 const Register = (props) => {
@@ -42,7 +42,8 @@ const Register = (props) => {
                             <>
                                 <FormInput value={fullName}
                                     style={GlobalStyles.input}
-                                    placeholder="Full Name"
+                                    placeholder="Ad & Soyad"
+                                    autoCapitalize={"none"}
                                     error={errors.fullName}
                                     placeholderTextColor="#9D9FA0"
                                     onChangeText={handleChange("fullName")} />
@@ -50,12 +51,14 @@ const Register = (props) => {
                                 <FormInput value={email}
                                     style={GlobalStyles.input}
                                     placeholder="Email"
+                                    autoCapitalize={"none"}
                                     keyboardType={"email-address"}
                                     error={errors.email}
                                     placeholderTextColor="#9D9FA0"
                                     onChangeText={handleChange("email")} />
 
                                 <FormInput value={password}
+                                    autoCapitalize={"none"}
                                     style={GlobalStyles.input}
                                     placeholder="******"
                                     error={errors.password}
@@ -64,6 +67,7 @@ const Register = (props) => {
                                     onChangeText={handleChange("password")} />
 
                                 <FormInput value={confirmPassword}
+                                    autoCapitalize={"none"}
                                     style={GlobalStyles.input}
                                     placeholder="******"
                                     error={errors.confirmPassword}
@@ -73,7 +77,7 @@ const Register = (props) => {
 
                                 <FormSubmitButton
                                     onPress={handleSubmit}
-                                    title='Sign up' />
+                                    title='KAYIT OL' />
                                 {/* {state.errorMessage ? <Text>{state.errorMessage}</Text> : null} */}
                             </>
                         )
@@ -82,7 +86,6 @@ const Register = (props) => {
                 {/* <Button title="login" onPress={() => navigation.navigate("Login")} /> */}
                 <View style={[styles.yho, { flexDirection: "row"}]}>                    
                 <Text onPress={() => navigation.navigate("Login")} style={[GlobalStyles.titlewhite,{ textAlign:'center' }]}>
-                    <Text>Kayıt Ol{'\n'}{'\n'}</Text>
                     <Text style={[styles.textorange, {textAlign:'center',marginTop:15}]}>Giriş Yap</Text>
                 </Text>
             </View>

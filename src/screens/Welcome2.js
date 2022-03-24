@@ -72,25 +72,33 @@ const Welcome2 = ({ route }) => {
                         )
                     }}
                 />
-                <View style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }}>
-                    <RadioButton color="#075CAB"
-                        value="beginner"
-                        status={checked === 'beginner' ? 'checked' : 'unchecked'}
-                        onPress={() => setChecked('beginner')}
-                    />
-                    <Text style={styles.rtext}>Başlagıç</Text>
-                    <RadioButton color="#075CAB"
-                        value="intermediate"
-                        status={checked === 'intermediate' ? 'checked' : 'unchecked'}
-                        onPress={() => setChecked('intermediate')}
-                    />
-                    <Text style={styles.rtext}>Orta Düzey</Text>
-                    <RadioButton color="#075CAB"
-                        value="advanced"
-                        status={checked === 'advanced' ? 'checked' : 'unchecked'}
-                        onPress={() => setChecked('advanced')}
-                    />
-                    <Text style={styles.rtext}>İleri Düzey</Text>
+                <View style={{ flexDirection: "row", justifyContent: "center"}}>
+                    <TouchableOpacity style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }} onPress={() => setChecked('beginner')}>
+                        <RadioButton color="#075CAB"
+                            value="beginner"
+                            status={checked === 'beginner' ? 'checked' : 'unchecked'}
+                        />
+                        <Text style={styles.rtext}>Başlagıç</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }} onPress={() => setChecked('intermediate')}>
+                        <RadioButton color="#075CAB"
+                            value="intermediate"
+                            status={checked === 'intermediate' ? 'checked' : 'unchecked'}
+                            onPress={() => setChecked('intermediate')}
+                        />
+                        <Text style={styles.rtext}>Orta Düzey</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }} onPress={() => setChecked('advanced')}>
+                        <RadioButton color="#075CAB"
+                            value="advanced"
+                            status={checked === 'advanced' ? 'checked' : 'unchecked'}
+                            onPress={() => setChecked('advanced')}
+                        />
+                        <Text style={styles.rtext}>İleri Düzey</Text>
+                    </TouchableOpacity>
+
                 </View>
             </View>
             <View style={{ flex: 1, justifyContent: "center" }}>
