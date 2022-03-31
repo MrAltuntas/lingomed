@@ -20,6 +20,7 @@ const Welcome2 = ({ route }) => {
     const handleSubmit = async (userInit) => {
         await AsyncStorage.setItem("targetLang", userInit.targetLang)
         await AsyncStorage.setItem("nativeLang", userInit.nativeLang)
+        await AsyncStorage.setItem("level", userInit.level)
 
         const token = await AsyncStorage.getItem("token");
         const config = {
@@ -74,11 +75,13 @@ const Welcome2 = ({ route }) => {
                 />
                 <View style={{ flexDirection: "row", justifyContent: "center"}}>
                     <TouchableOpacity style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }} onPress={() => setChecked('beginner')}>
+
                         <RadioButton color="#075CAB"
                             value="beginner"
                             status={checked === 'beginner' ? 'checked' : 'unchecked'}
-                        />
+                            onPress={() => setChecked('beginner')}/>
                         <Text style={styles.rtext}>Başlagıç</Text>
+
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }} onPress={() => setChecked('intermediate')}>
@@ -90,11 +93,11 @@ const Welcome2 = ({ route }) => {
                         <Text style={styles.rtext}>Orta Düzey</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }} onPress={() => setChecked('advanced')}>
+                    <TouchableOpacity style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }} onPress={() => setChecked('advance')}>
                         <RadioButton color="#075CAB"
-                            value="advanced"
-                            status={checked === 'advanced' ? 'checked' : 'unchecked'}
-                            onPress={() => setChecked('advanced')}
+                            value="advance"
+                            status={checked === 'advance' ? 'checked' : 'unchecked'}
+                            onPress={() => setChecked('advance')}
                         />
                         <Text style={styles.rtext}>İleri Düzey</Text>
                     </TouchableOpacity>

@@ -1,26 +1,30 @@
 import React, { useContext, useState, useEffect } from "react";
-import { ScrollView, View, Text, StyleSheet, Modal, Image, TouchableOpacity, Pressable, FlatList, ActivityIndicator, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ImageBackground } from 'react-native'
 import useCollection from "../hooks/useCollection";
 import { useNavigation } from '@react-navigation/native';
 import { Context as LangContext } from '../context/LangContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import FormSubmitButton from "../components/Forms/FormSubmitButton";
 import { API_URL } from '../../config'
-import LingomedBottomMenu from "../components/NavigationMenus/BottomMenu/LingomedBottomMenu";
 import { Audio } from 'expo-av';
 import mainApi from "../api/mainApi";
 
 import { Button, Paragraph, Dialog, Portal, Provider } from 'react-native-paper';
+import ColoredModal from "../components/ColoredModal";
 
 const Sentence = ({ route }) => {
     const [collectionApi, sentences, errorMessage] = useCollection("sentences")
+    const [wordsApi, coloredWords, wordsErrorMessage] = useCollection("coloredWords")
     const contextLang = useContext(LangContext)
     const navigation = useNavigation();
+
     const [targetLang, setTargetLang] = useState("en")
     const [modalVisible, setModalVisible] = useState(false);
-    const { categoryId, categoryName } = route.params
+    const [visible, setVisible] = useState(false);
+
     const [hiddenCount, setHiddenCount] = useState(0)
-    const [sound, setSound] = useState();
+    const [level, setLevel] = useState();
+
+    const { categoryId, categoryName } = route.params
 
     useEffect(async () => {
 
@@ -35,10 +39,11 @@ const Sentence = ({ route }) => {
         });
 
         setTargetLang(await AsyncStorage.getItem("targetLang"))
+        setLevel(await AsyncStorage.getItem("level"))
     }, [])
 
     let selection = sentences.filter(sentence => sentence.categoryId.includes(categoryId))
-    selection = selection.filter(select => select.symbol == targetLang)
+    selection = selection.filter(select => select.level.includes(level))
 
     const handleHidden = () => {
         console.log(selection.length, " ", hiddenCount);
@@ -53,17 +58,11 @@ const Sentence = ({ route }) => {
 
     async function playSound(url) {
         //await Audio.requestPermissionsAsync();
-
-        console.log('Loading Sound');
         const { sound } = await Audio.Sound.createAsync({ uri: url },
             { shouldPlay: true });
-        setSound(sound);
-        console.log('Playing Sound');
     }
 
-
     const like = async () => {
-        console.log(selection[hiddenCount]._id, selection[hiddenCount].symbol, contextLang.state.lang, selection[hiddenCount].sentence);
 
         try {
             const email = await AsyncStorage.getItem("email")
@@ -83,12 +82,8 @@ const Sentence = ({ route }) => {
             console.log(error);
         }
     }
-
-
-    const [visible, setVisible] = React.useState(false);
-    const showDialog = () => setVisible(true);
     const hideDialog = () => setVisible(false);
-
+  
     return (
         <Provider>
             <View style={styles.container}>
@@ -101,6 +96,11 @@ const Sentence = ({ route }) => {
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(select) => select._id}
                         renderItem={({ item, index }) => {
+                            let flashCardTarget = item.flashCards.filter(flashCard => flashCard.symbol == targetLang)[0]
+                            let flashCardNative = item.flashCards.filter(flashCard => flashCard.symbol == contextLang.state.lang)[0]
+
+                            let flashCardColoredWords = coloredWords.filter(word => word.flashCardId == flashCardTarget._id)
+                            console.log(flashCardColoredWords, "$$$$$$$$$$$$$$$$$$$$$");
                             return (
                                 <>
                                     {index == hiddenCount ?
@@ -108,61 +108,33 @@ const Sentence = ({ route }) => {
                                             <ImageBackground source={{ uri: API_URL + item.img }} imageStyle={styles.br10} resizeMode="stretch" style={styles.bosimage}>
                                                 <View style={styles.soundicon1}>
                                                     <View style={styles.soundiconcircle} >
-                                                        <TouchableOpacity onPress={() => playSound(API_URL + item.audio)} style={styles.mt14}><Image source={require('../../assets/sound.png')} /></TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => playSound(API_URL + flashCardTarget.audioPath)} style={styles.mt14}><Image source={require('../../assets/sound.png')} /></TouchableOpacity>
                                                     </View>
                                                 </View>
                                             </ImageBackground>
                                             <View style={styles.textview}>
-                                                <Text style={styles.text1}>{item.sentence}</Text>
-                                                <Text style={styles.text2}>{item.translations.filter(translation => translation.symbol == contextLang.state.lang)[0].sentence}</Text>
+                                                <Text style={styles.text1}>{flashCardTarget.sentence}</Text>
+                                                <Text style={styles.text2}>{flashCardNative.sentence}</Text>
                                                 <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
 
-                                                    {item.dailySentence.split(" ").map(sentence => {
+                                                    {flashCardTarget.dailySentence.split(" ").map((sentence, index) => {
+                                                        let word = flashCardColoredWords.filter(word => word.word == sentence)
 
-                                                        if (sentence.includes("incontinent")) {
-                                                            return (<TouchableOpacity key={sentence} onPress={() => setModalVisible(!modalVisible)}><Text style={styles.text3}>{sentence} </Text></TouchableOpacity>)
+                                                        if (word.length > 0) {
+                                                            return (
+                                                                <View key={index}>
+                                                                    <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}><Text style={styles.text3}>{word[0].word} </Text></TouchableOpacity>
+                                                                    <ColoredModal modalVisible={modalVisible} setModalVisible={setModalVisible} word={word[0]} playSound={playSound} nativeLang={contextLang.state.lang}/>
+                                                                </View>
+                                                            )
+                                                        } else {
+                                                            return (<Text key={sentence} style={styles.text4}>{sentence} </Text>)
+
                                                         }
-                                                        return (<Text key={sentence} style={styles.text4}>{sentence} </Text>)
-
                                                     })}
                                                 </View>
+
                                             </View>
-
-                                            <Modal
-                                                animationType="fade"
-                                                transparent={true}
-                                                visible={modalVisible}
-                                                onRequestClose={() => {
-                                                    Alert.alert("Modal has been closed.");
-                                                    setModalVisible(!modalVisible);
-                                                }}
-                                            >
-                                                <View style={styles.centeredView}>
-                                                    <View style={styles.modalView}>
-
-                                                        <Text style={styles.modalText}>incontinent</Text>
-                                                        <Text style={styles.modalText2}>idrarını tutamayan</Text>
-                                                        <Text style={styles.modalText2}>iradesiz</Text>
-
-                                                        <View style={styles.bottomContainer}>
-                                                            <View style={styles.popupwp}>
-                                                                <View>
-                                                                    <Image style={styles.popupimage} source={require('../../assets/soundyellow.png')} />
-                                                                </View>
-                                                                <View>
-                                                                    <Image style={styles.popupimage} source={require('../../assets/begen.png')} />
-                                                                </View>
-                                                            </View>
-                                                        </View>
-                                                        <Pressable
-                                                            style={styles.closecircle}
-                                                            onPress={() => setModalVisible(!modalVisible)}
-                                                        >
-                                                            <Text style={styles.closecircletext}>X</Text>
-                                                        </Pressable>
-                                                    </View>
-                                                </View>
-                                            </Modal>
 
                                             <TouchableOpacity onPress={() => navigation.navigate("Question")} >
                                                 <Text style={{ textAlign: "center", marginTop: 25 }}>Quiz Sayfasına Geç</Text>
@@ -170,7 +142,6 @@ const Sentence = ({ route }) => {
 
                                         </View>
                                         : null}
-
                                 </>
                             )
                         }}
@@ -209,56 +180,6 @@ const Sentence = ({ route }) => {
 
 
 const styles = StyleSheet.create({
-    popupwp: {
-        flex: 1,
-        justifyContent: "center",
-        alignContent: "center",
-        alignItems: "center",
-        flexDirection: "row"
-    },
-    textStyle: {
-        textAlign: "center",
-        marginTop: 15
-    },
-    modalText: {
-        color: "#fff",
-        fontWeight: "bold",
-        fontSize: 25,
-        marginBottom: 20,
-        textAlign: "center"
-    },
-    modalText2: {
-        color: "#fff",
-        fontWeight: "400",
-        fontSize: 14,
-        marginBottom: 5,
-        textAlign: "center",
-        borderBottomColor: "#ffffff90",
-        borderBottomWidth: 2
-    },
-    modalView: {
-        margin: 0,
-        backgroundColor: "#1566B1",
-        borderRadius: 20,
-        padding: 35,
-        paddingBottom: 10,
-
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#00000090",
-    },
     textview: {
         alignItems: "center",
         marginTop: 50
@@ -266,7 +187,6 @@ const styles = StyleSheet.create({
     mt14: {
         marginTop: 14
     },
-
     soundiconcircle: {
         width: 70,
         height: 70,
@@ -275,25 +195,9 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         backgroundColor: 'orange'
     },
-
-    closecircle: {
-        alignItems: 'center',
-        borderRadius: 100,
-        backgroundColor: 'orange',
-        position: "absolute",
-        right: 0,
-        top: -10,
-        textAlign: "center"
-    },
-
-    closecircletext: {
-        color: "#fff", textAlign: "center", width: 30, height: 30, lineHeight: 28,
-    },
-
     soundicon1: { position: "absolute", bottom: -30 },
     br10: { borderRadius: 10 },
     fview: { flex: 4, paddingLeft: 20, paddingRight: 20 },
-    vtitle: { marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30 },
     text1: {
         color: "#F6AE00",
         fontWeight: "bold",
@@ -329,7 +233,6 @@ const styles = StyleSheet.create({
         position: "relative",
         borderRadius: 20
     },
-
     bottomContainer: {
         height: 101,
         justifyContent: 'flex-end',
@@ -352,14 +255,6 @@ const styles = StyleSheet.create({
     },
     footerimage: {
         marginTop: 20,
-        alignItems: "center",
-        width: 35,
-        height: 32
-    },
-    popupimage: {
-        margin: 0,
-        marginLeft: 20,
-        marginRight: 20,
         alignItems: "center",
         width: 35,
         height: 32

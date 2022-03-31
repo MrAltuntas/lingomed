@@ -47,7 +47,7 @@ const Profile = () => {
             const response = await mainApi.post('/data/userinfo', { email: email }, config)
 
             if (response.data.success == true) {
-                console.log(response.data.data);
+                console.log(response.data.data, "#############################");
                 setUserInfo(response.data.data)
                 setVoiceEffect(response.data.data.voiceEffect)
                 setVoiceAutoplay(response.data.data.voiceAutoplay)
@@ -112,7 +112,7 @@ const Profile = () => {
                                             <Image source={{ uri: `${API_URL}/assets/${userInfo.nativeLang}.png` }} style={[styles.editimg, styles.ml10]} />
                                             <Text style={styles.ml10}>{userInfo.nativeLang}</Text>
                                         </View>
-                                        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => navigationRef.navigate("Welcome")}>
+                                        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => navigation.reset({index: 0,routes: [{ name: 'Welcome' }],})}>
                                             <Image source={require('../../assets/edit.png')} style={styles.editimg} />
                                         </TouchableOpacity>
                                     </View>

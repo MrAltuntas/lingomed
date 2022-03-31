@@ -67,7 +67,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.homePage}
-                            onPress={() => {props.navigation.navigate('Categories')}}
+                            onPress={() => {props.navigation.navigate('MainStackScreen')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (

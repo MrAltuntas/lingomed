@@ -4,6 +4,9 @@ import { NativeModules, Platform } from 'react-native'
 
 const en = require('../lang/en.json');
 const tr = require('../lang/tr.json');
+const de = require('../lang/de.json');
+const ar = require('../lang/ar.json');
+
 
 console.log("firsttt lang");
 
@@ -17,9 +20,9 @@ const DefaultLang = () => {
             case "tr":
                 return tr
             case "de":
-                return en
+                return de
             case "ar":
-                return en
+                return ar
             case "ru":
                 return en
             case "jp":
@@ -35,9 +38,9 @@ const DefaultLang = () => {
             case "tr":
                 return tr
             case "de":
-                return en
+                return de
             case "ar":
-                return en
+                return ar
             case "ru":
                 return en
             case "jp":
@@ -56,9 +59,9 @@ const langReducer = (state, action) => {
         case "tr":
             return tr
         case "de":
-            return en
+            return de
         case "ar":
-            return en
+            return ar
         case "ru":
             return en
         case "jp":

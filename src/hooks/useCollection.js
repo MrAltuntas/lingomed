@@ -23,7 +23,7 @@ export default (collection) => {
 
         } catch (error) {
             console.log(error);
-            setErrorMessage('something went wrong')
+            setErrorMessage(error)
         }
     }
 

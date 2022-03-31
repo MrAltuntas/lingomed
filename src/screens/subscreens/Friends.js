@@ -1,11 +1,14 @@
-import React from "react";
+import React,{useContext} from "react";
 import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native';
 import LingomedBottomMenu from "../../components/NavigationMenus/BottomMenu/LingomedBottomMenu";
 
+import { Context as LangContext } from '../../context/LangContext'
+
 const Friends = () => {
     const navigation = useNavigation();
+    const contextLang = useContext(LangContext)
 
     return (
         <View style={styles.container}>
@@ -16,7 +19,7 @@ const Friends = () => {
 
                
             </View>
-            <LingomedBottomMenu navigation={navigation} />
+            <LingomedBottomMenu contextLang={contextLang} navigation={navigation} />
         </View>
     )
 }

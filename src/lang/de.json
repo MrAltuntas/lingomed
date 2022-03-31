@@ -1,0 +1,26 @@
+{
+    "lang":"de",
+    "merhaba":"merhaba",
+    "bekleyiniz":"lütfen bekleyiniz...",
+    "ara":"ara",
+    "yildizlar":"yıldızlar",
+    "yorumlar":"yorumlar",
+    "luks":"Lüks",
+    "ortaSinif":"Orta Sınıf",
+    "ekonomik":"Ekonomik",
+
+    "lessons":"Dersler",
+    "writeToUs":"Bize Yazın",
+    "friends":"Arkadaşlar",
+    "statistics":"İstatistik",
+    "competitors":"Rakipler",
+    "addedToFavori":"Cümle favorilere eklendi!",
+    "save":"KAYDET",
+    "selectLang":"Dil Seçimi : ",
+    "voiceEffect": "Ses Efekti",
+    "autoPlay":"Otomatik Oynatıcı",
+    "homePage":"Ana Sayfa",
+    "profile":"Profil",
+    "logOut":"Çıkış Yap"
+
+}

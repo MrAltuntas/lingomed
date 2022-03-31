@@ -178,6 +178,8 @@ function App() {
           if (response.data.success == true) {
             try {
               await AsyncStorage.setItem("token", response.data.access_token)
+              await AsyncStorage.setItem("email", userInfo.email)
+
             } catch (error) {
               console.log(error);
             }
