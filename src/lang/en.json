@@ -21,6 +21,7 @@
     "autoPlay":"Auto play",
     "homePage":"Home Page",
     "profile":"Profile",
-    "logOut":"Logout"
+    "logOut":"Logout",
+    "dictionary":"Dictionary"
 
 }

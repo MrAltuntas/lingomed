@@ -1,7 +1,7 @@
 import { ScrollView, View, Text, StyleSheet, Modal, Image, TouchableOpacity, Pressable, FlatList, ActivityIndicator, ImageBackground } from 'react-native'
 import { API_URL } from '../../config'
 
-const ColoredModal = ({ modalVisible, setModalVisible, word, playSound, nativeLang }) => {
+const ColoredModal = ({ index, modalVisible, setModalVisible, word, playSound, nativeLang }) => {
     console.log(nativeLang);
 
     if (!nativeLang ) {
@@ -13,10 +13,10 @@ const ColoredModal = ({ modalVisible, setModalVisible, word, playSound, nativeLa
             <Modal
                 animationType="fade"
                 transparent={true}
-                visible={modalVisible}
+                visible={modalVisible==index ? true:false}
                 onRequestClose={() => {
                     Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
+                    setModalVisible(-1);
                 }}
             >
                 <View style={styles.centeredView}>
@@ -37,7 +37,7 @@ const ColoredModal = ({ modalVisible, setModalVisible, word, playSound, nativeLa
                         </View>
                         <Pressable
                             style={styles.closecircle}
-                            onPress={() => setModalVisible(!modalVisible)}
+                            onPress={() => setModalVisible(-1)}
                         >
                             <Text style={styles.closecircletext}>X</Text>
                         </Pressable>

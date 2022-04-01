@@ -67,7 +67,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.homePage}
-                            onPress={() => {props.navigation.navigate('MainStackScreen')}}
+                            onPress={() => {props.navigation.navigate('Categories')}}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
@@ -80,7 +80,17 @@ export function DrawerContent(props) {
                             label={contextLang.state.profile}
                             onPress={() => {props.navigation.navigate('Profile')}}
                         />
-                        
+                        <DrawerItem 
+                            icon={({color, size}) => (
+                                <Icon 
+                                name="book" 
+                                color={color}
+                                size={size}
+                                />
+                            )}
+                            label={contextLang.state.dictionary}
+                            onPress={() => {props.navigation.navigate('Dictionary')}}
+                        />
                          {/* <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 

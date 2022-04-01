@@ -18,7 +18,7 @@ const Sentence = ({ route }) => {
     const navigation = useNavigation();
 
     const [targetLang, setTargetLang] = useState("en")
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(-1);
     const [visible, setVisible] = useState(false);
 
     const [hiddenCount, setHiddenCount] = useState(0)
@@ -123,8 +123,8 @@ const Sentence = ({ route }) => {
                                                         if (word.length > 0) {
                                                             return (
                                                                 <View key={index}>
-                                                                    <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}><Text style={styles.text3}>{word[0].word} </Text></TouchableOpacity>
-                                                                    <ColoredModal modalVisible={modalVisible} setModalVisible={setModalVisible} word={word[0]} playSound={playSound} nativeLang={contextLang.state.lang}/>
+                                                                    <TouchableOpacity onPress={() => setModalVisible(index)}><Text style={styles.text3}>{word[0].word} </Text></TouchableOpacity>
+                                                                    <ColoredModal index={index} modalVisible={modalVisible} setModalVisible={setModalVisible}  word={word[0]} playSound={playSound} nativeLang={contextLang.state.lang}/>
                                                                 </View>
                                                             )
                                                         } else {

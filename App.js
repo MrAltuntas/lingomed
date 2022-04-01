@@ -28,6 +28,7 @@ import Welcome from './src/screens/Welcome';
 import Welcome2 from './src/screens/Welcome2';
 import Sentence from './src/screens/Sentence';
 import Question from './src/screens/Quesetion';
+import Dictionary from './src/screens/Dictionary';
 
 //sub screens
 import Competitors from './src/screens/subscreens/Competitors';
@@ -99,6 +100,7 @@ const MainStackScreen = () => {
       <Stack.Screen options={{ title: 'friends' }} name="friends" component={Friends} />
       <Stack.Screen options={{ title: 'statistics' }} name="statistics" component={Statistics} />
       <Stack.Screen options={{ title: 'competitors' }} name="competitors" component={Competitors} />
+      <Stack.Screen options={{ title: 'Dictionary' }} name="Dictionary" component={Dictionary} />
     </Stack.Navigator>
   );
 }
