@@ -27,9 +27,5 @@ export default (collection, field, chrachter) => {
         }
     }
 
-    useEffect(() => {
-        collectionApi(collection, field, chrachter)
-    }, [])
-
     return [collectionApi, results, errorMessage]
 }

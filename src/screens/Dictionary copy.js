@@ -17,23 +17,24 @@ import useCollectionIncludes from "../hooks/useCollectionIncludes";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import ColoredModal from "../components/ColoredModal";
-import mainApi from "../api/mainApi";
-import ModalDictionary from "../components/ModalDictionary";
 
 
 const Dictionary = () => {
     const contextLang = useContext(LangContext)
 
+    const navigation = useNavigation();
     const [nativeLang, setNativeLang] = useState(contextLang.state.lang);
-    const [targetLang, setTargetLang] = useState({symbol: "en", order: 1, alphabet: []})
-
-    const [collectionApi, collectionWords, errorMessage] = useCollectionStartsWith()
-    const [includesApi, includesWords, includesError] = useCollectionIncludes()
+    const [targetLang, setTargetLang] = useState("en")
 
     const [selectedFilter, setSelectedFilter] = useState("A");
+    const [alphabet, setAlphabet] = useState([]);
 
     const [modalVisible, setModalVisible] = useState(-1);
     const [searchString, setSearchString] = useState(-1);
+
+    const [collectionApi, collectionWords, errorMessage] = useCollectionStartsWith("dictionary", "words.0.word", "a")
+    const [includesApi, includesWords, includesError] = useCollectionIncludes()
+
 
     useEffect(async () => {
         await Audio.setAudioModeAsync({
@@ -45,34 +46,20 @@ const Dictionary = () => {
             interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
             playsInSilentModeIOS: true,
         });
-
-        const token = await AsyncStorage.getItem("token");
-        const config = {
-            headers: { Authorization: `Arflok: ${token}` }
-        };
-        let targetLang = await AsyncStorage.getItem("targetLang")
-
-        try {
-            const response = await mainApi.get(`/data/getAccessible/lang`, config)
-            if (response.data.success) {
-
-                response.data.data.map(lang => {
-
-                    if (lang.symbol == targetLang) {
-                        collectionApi("dictionary", "words."+lang.order+".word", "a")
-                        setTargetLang({symbol: targetLang, order: lang.order, alphabet: lang.alphabet})
-                    }
-                })
-
+        console.log(langs, "asdfdsafsdafadsfdsaf");
+        langs.map(lang => {
+            if (lang.symbol == contextLang.state.lang){
+                console.log(lang.alphabet, "use effecttt");
+                setAlphabet(lang.alphabet)
             }
-        } catch (error) {
-            console.log(error);
-        }
+        })
 
+        setTargetLang(await AsyncStorage.getItem("targetLang"))
     }, [])
 
     const handleChrachterChange = (chrachter) => {
-        collectionApi("dictionary", "words."+targetLang.order+".word", chrachter)
+
+        collectionApi("dictionary", "words.1.word", chrachter)
         setSelectedFilter(chrachter)
     }
     async function playSound(url) {
@@ -81,9 +68,10 @@ const Dictionary = () => {
             { shouldPlay: true });
     }
     const handleSearch = async (searchString) => {
-        await includesApi("dictionary", "words."+targetLang.order+".word", searchString ? searchString : ">£#$£>#$dsfasdf")
+        await includesApi("dictionary", "word", searchString ? searchString : ">£#$£>#$dsfasdf")
     }
-    console.log("aaaa");
+
+
     // const selectedWords = words.filter(word => word.symbol == targetLang)
     // const selectedIncludesWords = includesWords.filter(word => word.symbol == targetLang)
     return (
@@ -108,7 +96,7 @@ const Dictionary = () => {
 
                     <FlatList
                         style={{ flex: 10, }}
-                        data={targetLang.alphabet}
+                        data={alphabet}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(alphabet, index) => index}
@@ -127,20 +115,32 @@ const Dictionary = () => {
                 </View>
 
                 <View style={styles.wordsCover}>
-                    
-                    <FlatList
-                        data={includesWords.length !== 0 ? includesWords : collectionWords}
+                    {/* <FlatList
+                        data={collectionWords}
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(selectedWords) => selectedWords._id}
                         renderItem={({ item, index }) => {
                             return (
                                 <TouchableOpacity onPress={() => setModalVisible(index)} style={styles.wordsInnerCover} >
-                                    <Text style={styles.wordText}>{item.words.filter(word => word.symbol == targetLang.symbol)[0].word}</Text>
-                                    <ModalDictionary index={index} modalVisible={modalVisible} setModalVisible={setModalVisible} word={item.words} playSound={playSound} nativeLang={contextLang.state.lang} targetLang={targetLang.symbol}/>
+                                    <Text style={styles.wordText}>{item.word}</Text>
+                                    <ColoredModal index={index} modalVisible={modalVisible} setModalVisible={setModalVisible} word={item} playSound={playSound} nativeLang={contextLang.state.lang} />
                                 </TouchableOpacity>
                             )
                         }}
-                    />
+                    /> */}
+                    {/* <FlatList
+                        data={selectedIncludesWords.length !== 0 ? selectedIncludesWords : selectedWords}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(selectedWords) => selectedWords._id}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <TouchableOpacity onPress={() => setModalVisible(index)} style={styles.wordsInnerCover} >
+                                    <Text style={styles.wordText}>{item.word}</Text>
+                                    <ColoredModal index={index} modalVisible={modalVisible} setModalVisible={setModalVisible} word={item} playSound={playSound} nativeLang={contextLang.state.lang} />
+                                </TouchableOpacity>
+                            )
+                        }}
+                    /> */}
                 </View>
             </View>
         </View>

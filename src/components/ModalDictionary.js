@@ -1,8 +1,9 @@
 import { ScrollView, View, Text, StyleSheet, Modal, Image, TouchableOpacity, Pressable, FlatList, ActivityIndicator, ImageBackground } from 'react-native'
 import { API_URL } from '../../config'
 
-const ColoredModal = ({ index, modalVisible, setModalVisible, word, playSound, nativeLang }) => {
-    if (!nativeLang ) {
+const ModalDictionary = ({ index, modalVisible, setModalVisible, word, playSound, nativeLang, targetLang }) => {
+
+    if (!nativeLang || !targetLang ) {
         return (
             null
         )
@@ -20,12 +21,12 @@ const ColoredModal = ({ index, modalVisible, setModalVisible, word, playSound, n
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
 
-                        <Text style={styles.modalText}>{word.word}</Text>
-                        <Text style={styles.modalText2}>{word.translations.filter(translation => translation.symbol == nativeLang)[0].translation}</Text>
+                        <Text style={styles.modalText}>{word.filter(word => word.symbol == targetLang)[0].word}</Text>
+                        <Text style={styles.modalText2}>{word.filter(word => word.symbol == nativeLang)[0].word}</Text>
 
                         <View style={styles.bottomContainer}>
                             <View style={styles.popupwp}>
-                                <TouchableOpacity onPress={() => playSound(API_URL + word.audioPath)} >
+                                <TouchableOpacity onPress={() => playSound(API_URL + word.filter(word => word.symbol == targetLang)[0].audioPath)} >
                                     <Image style={styles.popupimage} source={require('../../assets/soundyellow.png')} />
                                 </TouchableOpacity>
                                 <View>
@@ -125,4 +126,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ColoredModal
+export default ModalDictionary
