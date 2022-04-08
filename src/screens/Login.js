@@ -30,7 +30,6 @@ const Login = (props) => {
     const userInfo = { email: "", password: "" }
     const navigation = useNavigation();
 
-    console.log(contextLang.state.merhaba);
 
     useEffect(async () => {
         await SetLang(contextLang)

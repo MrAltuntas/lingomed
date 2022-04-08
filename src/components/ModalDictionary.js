@@ -1,13 +1,60 @@
 import { ScrollView, View, Text, StyleSheet, Modal, Image, TouchableOpacity, Pressable, FlatList, ActivityIndicator, ImageBackground } from 'react-native'
 import { API_URL } from '../../config'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import mainApi from "../api/mainApi";
 
-const ModalDictionary = ({ index, modalVisible, setModalVisible, word, playSound, nativeLang, targetLang }) => {
+const ModalDictionary = ({coloredObj={},colored=false,userContext, index, modalVisible, setModalVisible, word, playSound, nativeLang, targetLang, showDialog, id, deleteData = false, likedWordId, collectionApiObj }) => {
+    console.log(word);
+    const like = async () => {
 
+        try {
+            const email = await AsyncStorage.getItem("email")
+            const token = await AsyncStorage.getItem("token");
+            const config = {
+                headers: { Authorization: `Arflok: ${token}` }
+            };
+            const response = await mainApi.post(`/data/pushData/users/${email}/likedWords`, { id: id, symbol:targetLang }, config)
+
+            if (response.data.success && response.data.data.likedWords.length > 0) {
+                userContext.updateUser("pushLikedWord", { id: id, symbol: targetLang, _id: response.data.data.likedWords.slice(-1)[0]._id })
+                setModalVisible(-1);
+                showDialog()
+                console.log("eklendi");
+            }
+
+        } catch (error) {
+            alert("Favori Cümlelere Eklenemedi!!!")
+            console.log(error);
+        }
+    }
+
+    const deleteWord = async () => {
+
+        try {
+            const token = await AsyncStorage.getItem("token");
+
+            const config = {
+                headers: { Authorization: `Arflok: ${token}` }
+            };
+            const response = await mainApi.post(`/data/removeData/users/${userContext.state.email}/likedWords/${likedWordId}`,{}, config)
+
+            if (response.data.success) {
+                setModalVisible(-10);
+                showDialog()
+                console.log("eklendi");
+            }
+
+        } catch (error) {
+            alert("Favori Cümlelere Eklenemedi!!!")
+            console.log(error.response.data);
+        }
+    }
     if (!nativeLang || !targetLang ) {
         return (
             null
         )
     } else {
+        let audioPath = colored ? coloredObj.audioPath:word.filter(word => word.symbol == targetLang)[0].audioPath
         return (
             <Modal
                 animationType="fade"
@@ -15,23 +62,23 @@ const ModalDictionary = ({ index, modalVisible, setModalVisible, word, playSound
                 visible={modalVisible==index ? true:false}
                 onRequestClose={() => {
                     Alert.alert("Modal has been closed.");
-                    setModalVisible(-1);
+                    setModalVisible(-10);
                 }}
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
 
-                        <Text style={styles.modalText}>{word.filter(word => word.symbol == targetLang)[0].word}</Text>
+                        <Text style={styles.modalText}>{colored ? coloredObj.word:word.filter(word => word.symbol == targetLang)[0].word}</Text>
                         <Text style={styles.modalText2}>{word.filter(word => word.symbol == nativeLang)[0].word}</Text>
 
                         <View style={styles.bottomContainer}>
                             <View style={styles.popupwp}>
-                                <TouchableOpacity onPress={() => playSound(API_URL + word.filter(word => word.symbol == targetLang)[0].audioPath)} >
+                                <TouchableOpacity onPress={() => playSound(API_URL + audioPath)} >
                                     <Image style={styles.popupimage} source={require('../../assets/soundyellow.png')} />
                                 </TouchableOpacity>
-                                <View>
+                                <TouchableOpacity onPress={deleteData ? () => deleteWord(word):() => like()}>
                                     <Image style={styles.popupimage} source={require('../../assets/begen.png')} />
-                                </View>
+                                </TouchableOpacity>
                             </View>
                         </View>
                         <Pressable

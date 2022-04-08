@@ -23,16 +23,7 @@ const authReducer = (state, action) => {
 
 const tryLocalSignin = (dispatch) => async () => {
   const token = await AsyncStorage.getItem("token");
-  console.log("tokennnnnnnnnnnnnnnnnnnnnnn");
-
   dispatch({ type: "localSignin", payload: true });
-
-  // if (token) {
-  //   dispatch({ type: "signin", payload: token });
-  //   navigate("Welcome");
-  // } else {
-  //   navigate("Register");
-  // }
 };
 
 
@@ -41,7 +32,6 @@ const clearErrorMessage = (dispatch) => () => {
 };
 
 const login = (dispatch) => async (userInfo) => {
-  console.log("Login",userInfo);
   try {
     const response = await mainApi.post('/data/login', userInfo)
 
@@ -83,7 +73,6 @@ const login = (dispatch) => async (userInfo) => {
 };
 
 const signin = (dispatch) => async (userInfo) => {
-  console.log("signin contextauth");
   try {
     const response = await mainApi.post('/data/register', userInfo)
 

@@ -27,9 +27,7 @@ const ForgetPassword = (props) => {
 
     const handleForgotPassword = async ({ email }) => {
         try {
-            console.log(email);
             const response = await mainApi.post('/data/forgotpassword', { email })
-            console.log(response.data);
 
             if (response.data.success) {
                 alert("Şifre sıfırlama linki mail adresinize gönderildi")
@@ -55,8 +53,6 @@ const ForgetPassword = (props) => {
         }
 
     }
-
-    console.log(contextLang.state.merhaba);
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">

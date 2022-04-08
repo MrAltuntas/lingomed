@@ -9,7 +9,7 @@ const FormInput = (props) => {
                 <Text>{label}</Text>
                 {error? <Text>{error}</Text>:null}
             </View>
-            <TextInput {...props} placeholder={placeholder}/>
+            <TextInput {...props} ref = {props.innerRef} placeholder={placeholder}/>
         </>
     )
 }

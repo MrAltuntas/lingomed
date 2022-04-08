@@ -5,6 +5,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { DrawerContent } from './src/screens/NavigationContents/DrawerContent';
 
 import { Provider as LangProvider } from './src/context/LangContext'
+import { Provider as UserProvider } from './src/context/UserContext'
 import { navigationRef } from './src/RootNavigation';
 
 import mainApi from './src/api/mainApi';
@@ -16,10 +17,10 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import { AuthContext2 } from "./src/context/AuthContext2";
 import { UserContext } from "./src/context/UserContext";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Audio } from 'expo-av';
 
 
 //screens
-import LessonsAndDic from './src/screens/LessonsAndDic';
 import Profile from './src/screens/Profile';
 import Login from './src/screens/Login';
 import ForgetPassword from './src/screens/ForgetPassword'
@@ -29,6 +30,9 @@ import Welcome2 from './src/screens/Welcome2';
 import Sentence from './src/screens/Sentence';
 import Question from './src/screens/Quesetion';
 import Dictionary from './src/screens/Dictionary';
+import LikedWords from './src/screens/LikedWords';
+import LikedSentence from './src/screens/LikedSentence';
+import LikedSentencesDetail from './src/screens/LikedSentenceDetail';
 
 //sub screens
 import Competitors from './src/screens/subscreens/Competitors';
@@ -101,6 +105,9 @@ const MainStackScreen = () => {
       <Stack.Screen options={{ title: 'statistics' }} name="statistics" component={Statistics} />
       <Stack.Screen options={{ title: 'competitors' }} name="competitors" component={Competitors} />
       <Stack.Screen options={{ title: 'Dictionary' }} name="Dictionary" component={Dictionary} />
+      <Stack.Screen options={{ title: 'LikedWords' }} name="LikedWords" component={LikedWords} />
+      <Stack.Screen options={{ title: 'LikedSentence' }} name="LikedSentence" component={LikedSentence} />
+      <Stack.Screen options={{ title: 'LikedSentencesDetail' }} name="LikedSentencesDetail" component={LikedSentencesDetail} />
     </Stack.Navigator>
   );
 }
@@ -114,9 +121,10 @@ function App() {
 
 
   useEffect(async () => {
+    
 
     const token = await AsyncStorage.getItem("token");
-    const isUserInit = await AsyncStorage.getItem("targetLang");
+    const isUserInit = await AsyncStorage.getItem("isUserInit");
     setUserInit(isUserInit)
 
     const config = {
@@ -142,7 +150,6 @@ function App() {
   const authContext = React.useMemo(() => {
     return {
       signIn: async (userInfo) => {
-        console.log("Login", userInfo);
         try {
           const response = await mainApi.post('/data/login', userInfo)
 
@@ -173,7 +180,6 @@ function App() {
         }
       },
       signUp: async (userInfo) => {
-        console.log("signin contextauth");
         try {
           const response = await mainApi.post('/data/register', userInfo)
 
@@ -223,31 +229,33 @@ function App() {
 
   return (
     <LangProvider>
-      <AuthContext2.Provider value={authContext}>
-        <NavigationContainer ref={navigationRef}>
-          {isSignedIn ? isUserInit ?
-            <Drawer.Navigator initialRouteName="MainStackScreen" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }} drawerContent={props => <DrawerContent {...props} />}>
-              <Drawer.Screen options={{ title: 'Categories', headerShown: false }} name="MainStackScreen" component={MainStackScreen} />
-              <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
-              <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
-              <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
-            </Drawer.Navigator>
-            :
-            <Drawer.Navigator initialRouteName="Welcome" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }} drawerContent={props => <DrawerContent {...props} />}>
-              <Drawer.Screen options={{ title: 'Categories', headerShown: false }} name="MainStackScreen" component={MainStackScreen} />
-              <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
-              <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
-              <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
-            </Drawer.Navigator>
-            :
-            <AuthStack.Navigator initialRouteName="Login">
-              <AuthStack.Screen options={{ title: 'Lingomed', headerShown: false }} name="Register" component={Register} />
-              <AuthStack.Screen options={{ title: 'Login', headerShown: false }} name="Login" component={Login} />
-              <AuthStack.Screen options={{ title: 'Forget your password', headerShown: false }} name="ForgetPassword" component={ForgetPassword} />
-            </AuthStack.Navigator>
-          }
-        </NavigationContainer>
-      </AuthContext2.Provider>
+      <UserProvider>
+        <AuthContext2.Provider value={authContext}>
+          <NavigationContainer ref={navigationRef}>
+            {isSignedIn ? isUserInit ?
+              <Drawer.Navigator initialRouteName="MainStackScreen" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }} drawerContent={props => <DrawerContent {...props} />}>
+                <Drawer.Screen options={{ title: 'Categories', headerShown: false }} name="MainStackScreen" component={MainStackScreen} />
+                <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
+                <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
+                <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
+              </Drawer.Navigator>
+              :
+              <Drawer.Navigator initialRouteName="Welcome" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }} drawerContent={props => <DrawerContent {...props} />}>
+                <Drawer.Screen options={{ title: 'Categories', headerShown: false }} name="MainStackScreen" component={MainStackScreen} />
+                <Drawer.Screen options={{ title: 'Welcome' }} name="Welcome" component={Welcome} />
+                <Drawer.Screen options={{ title: 'Welcome2' }} name="Welcome2" component={Welcome2} />
+                <Drawer.Screen options={{ title: 'Lessons' }} name="Lessons" component={MainTabScreen} />
+              </Drawer.Navigator>
+              :
+              <AuthStack.Navigator initialRouteName="Login">
+                <AuthStack.Screen options={{ title: 'Lingomed', headerShown: false }} name="Register" component={Register} />
+                <AuthStack.Screen options={{ title: 'Login', headerShown: false }} name="Login" component={Login} />
+                <AuthStack.Screen options={{ title: 'Forget your password', headerShown: false }} name="ForgetPassword" component={ForgetPassword} />
+              </AuthStack.Navigator>
+            }
+          </NavigationContainer>
+        </AuthContext2.Provider>
+      </UserProvider>
     </LangProvider>
   );
 }

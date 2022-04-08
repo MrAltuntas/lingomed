@@ -1,8 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Context as LangContext } from '../context/LangContext'
+import { Context as UserContext } from '../context/UserContext'
 import LinearGradient from '../components/LinearGradient';
 import { RadioButton } from 'react-native-paper';
 import FormSubmitButton from "../components/Forms/FormSubmitButton";
@@ -16,27 +17,31 @@ import useCollection from "../hooks/useCollection";
 import { Switch } from 'react-native-paper';
 import { API_URL } from "../../config";
 import { navigationRef } from "../RootNavigation";
+import * as ImagePicker from 'expo-image-picker';
 
 let validationSchema = yup.object().shape({
-    email: yup.string().email('Invalid email!').required('Email is required!'),
-    password: yup.string().trim().min(6, 'Password is too short!').required('password is required!'),
+    email: yup.string().email('Invalid email!'),
 });
 
 const Profile = () => {
-    const [userInfo, setUserInfo] = useState({})
-    const [voiceEffect, setVoiceEffect] = useState();
-    const [voiceAutoplay, setVoiceAutoplay] = useState();
-    const navigation = useNavigation();
-
     const contextLang = useContext(LangContext)
+    const userContext = useContext(UserContext)
 
+    const [voiceEffect, setVoiceEffect] = useState(userContext.state.voiceEffect);
+    const [voiceAutoplay, setVoiceAutoplay] = useState(userContext.state.voiceAutoplay);
+    const [editable, setEditable] = useState(false);
+    const navigation = useNavigation();
+    const [image, setImage] = useState(null);
+
+    const textInputRef = useRef();
 
     const onToggleSwitch = () => setVoiceEffect(!voiceEffect);
     const onToggleSwitch2 = () => setVoiceAutoplay(!voiceAutoplay);
 
+    const handleSubmit = async (values) => {
+        values["voiceEffect"] = voiceEffect
+        values["voiceAutoplay"] = voiceAutoplay
 
-    useEffect(async () => {
-        const email = await AsyncStorage.getItem("email");
         const token = await AsyncStorage.getItem("token");
 
         const config = {
@@ -44,21 +49,73 @@ const Profile = () => {
         };
 
         try {
-            const response = await mainApi.post('/data/userinfo', { email: email }, config)
+            const response = await mainApi.post('/data/updateUser', values, config)
 
             if (response.data.success == true) {
-                console.log(response.data.data, "#############################");
-                setUserInfo(response.data.data)
-                setVoiceEffect(response.data.data.voiceEffect)
-                setVoiceAutoplay(response.data.data.voiceAutoplay)
+                userContext.updateUser("update", values)
             }
         } catch (error) {
             console.log(error.response);
         }
+    }
 
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
 
-    }, [])
-    console.log(voiceEffect);
+        if (!result.cancelled) {
+            setImage(result.uri);
+            const token = await AsyncStorage.getItem("token");
+
+            // ImagePicker saves the taken photo to disk and returns a local URI to it
+            let localUri = result.uri;
+            let filename = localUri.split('/').pop();
+
+            // Infer the type of the image
+            let match = /\.(\w+)$/.exec(filename);
+            let type = match ? `image/${match[1]}` : `image`;
+
+            // Upload the image using the fetch and FormData APIs
+            let formData = new FormData();
+            // Assume "photo" is the name of the form field the server expects
+            formData.append('image', { uri: localUri, name: filename, type });
+
+            const reponse = await fetch("http://192.168.0.21:5001/api/clientUploads/single", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'content-type': 'multipart/form-data',
+                    Authorization: `Arflok: ${token}`
+                },
+            });
+            const resultt = await reponse.json()
+            if(resultt.success== true){
+                const config = {
+                    headers: { Authorization: `Arflok: ${token}` }
+                };
+                
+                try {
+                    const response = await mainApi.post('/data/updateUser', {picture: resultt.path}, config)
+                    if (response.data.success == true) {
+                        userContext.updateUser("update", {picture: resultt.path})
+                    }
+                } catch (error) {
+                    console.log(error.response);
+                }
+
+            }
+        }
+    }
+
+    const changeName = async () => {
+        setEditable(true)
+        textInputRef.current.focus();
+    }
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">
@@ -66,40 +123,45 @@ const Profile = () => {
                 <LinearGradient startPlace={1} endPlace={0} height={300} />
                 <View style={{ flex: 1, alignItems: "center", marginTop: 40 }}>
                     <View style={styles.profileImgContainer}>
-                        <Image source={{ uri: `${API_URL}/${userInfo.picture}` }} style={styles.profileImg} />
+                        <Image source={image ? { uri: image } : { uri: `${API_URL}/${userContext.state.picture}` }} style={styles.profileImg} />
                         <View style={styles.circlewhite}>
-                            <View style={styles.editimgview}>
+                            <TouchableOpacity onPress={pickImage} style={styles.editimgview}>
                                 <Image source={require('../../assets/edit.png')} style={styles.editimg} />
-                            </View>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                    <Formik validationSchema={validationSchema} initialValues={userInfo} onSubmit={(values) => signIn(values)}>
+
+                    <Formik validationSchema={validationSchema} initialValues={userContext.state} onSubmit={(values) => handleSubmit(values)}>
                         {({ values, errors, handleSubmit, handleChange }) => {
-                            const { fullName, email, lang } = values
+
                             return (
                                 <>
                                     <View style={styles.w100}>
-                                        <FormInput value={fullName}
-                                            style={GlobalStyles.input}
-                                            placeholder={userInfo.fullName}
+                                        <FormInput 
+                                            style={ editable ? [GlobalStyles.input, {borderColor: "red", borderWidth: 1}]:GlobalStyles.input}
+                                            placeholder={userContext.state.fullName}
                                             error={errors.fullName}
                                             placeholderTextColor="#9D9FA0"
-                                            onChangeText={handleChange("fullName")} />
-                                        <View style={styles.inputediticon}>
+                                            onChangeText={editable ? handleChange("fullName"):null }
+                                            innerRef={textInputRef} />
+
+                                        <TouchableOpacity onPress={changeName} style={styles.inputediticon}>
                                             <Image source={require('../../assets/edit.png')} style={styles.editimg} />
-                                        </View>
+                                        </TouchableOpacity>
+
                                     </View>
                                     <View style={styles.w100}>
-                                        <FormInput value={email}
+                                        <FormInput 
                                             style={GlobalStyles.input}
-                                            placeholder={userInfo.email}
+                                            placeholder={userContext.state.email}
                                             keyboardType={"email-address"}
                                             error={errors.email}
                                             placeholderTextColor="#9D9FA0"
-                                            onChangeText={handleChange("email")} />
-                                        <View style={styles.inputediticon}>
+                                            onChangeText={handleChange("email")}
+                                            editable={false} />
+                                        {/* <TouchableOpacity onPress={() => setEditable({ ...editable, email: !editable.email })} style={styles.inputediticon}>
                                             <Image source={require('../../assets/edit.png')} style={styles.editimg} />
-                                        </View>
+                                        </TouchableOpacity> */}
                                     </View>
 
                                     <FormSubmitButton
@@ -109,10 +171,10 @@ const Profile = () => {
                                     <View style={[styles.wbox, styles.mt50]}>
                                         <View style={styles.spacebetween}>
                                             <Text style={styles.boxtext}>{contextLang.state.selectLang}</Text>
-                                            <Image source={{ uri: `${API_URL}/assets/${userInfo.nativeLang}.png` }} style={[styles.editimg, styles.ml10]} />
-                                            <Text style={styles.ml10}>{userInfo.nativeLang}</Text>
+                                            <Image source={{ uri: `${API_URL}/assets/${userContext.state.nativeLang}.png` }} style={[styles.editimg, styles.ml10]} />
+                                            <Text style={styles.ml10}>{userContext.state.nativeLang}</Text>
                                         </View>
-                                        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => navigation.reset({index: 0,routes: [{ name: 'Welcome' }],})}>
+                                        <TouchableOpacity style={{ marginRight: 15 }} onPress={() => navigation.reset({ index: 0, routes: [{ name: 'Welcome' }], })}>
                                             <Image source={require('../../assets/edit.png')} style={styles.editimg} />
                                         </TouchableOpacity>
                                     </View>

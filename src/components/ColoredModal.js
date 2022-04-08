@@ -1,12 +1,39 @@
 import { ScrollView, View, Text, StyleSheet, Modal, Image, TouchableOpacity, Pressable, FlatList, ActivityIndicator, ImageBackground } from 'react-native'
 import { API_URL } from '../../config'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import mainApi from '../api/mainApi'
 
-const ColoredModal = ({ index, modalVisible, setModalVisible, word, playSound, nativeLang }) => {
+const ColoredModal = ({setVisible, userContext, index, modalVisible, setModalVisible, word, playSound, nativeLang }) => {
+
+    const like = async (id, symbol) => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            const config = {
+                headers: { Authorization: `Arflok: ${token}` }
+            };
+            const response = await mainApi.post(`/data/pushData/users/${userContext.state.email}/likedWords`, { id: id, symbol:symbol }, config)
+
+            if (response.data.success && response.data.data.likedWords.length > 0) {
+                console.log(response.data.data.likedWords.slice(-1)[0]._id);
+
+                userContext.updateUser("pushLikedWord", { id: id, symbol: symbol, _id: response.data.data.likedWords.slice(-1)[0]._id })
+                setModalVisible(-1);
+                setVisible(true)
+                console.log("eklendi");
+            }
+
+        } catch (error) {
+            alert("Favori Cümlelere Eklenemedi!!!")
+            console.log(error);
+        }
+    }
+
     if (!nativeLang ) {
         return (
             null
         )
     } else {
+        const translation = word.translations.filter(translation => translation.symbol == nativeLang).length > 0 ? word.translations.filter(translation => translation.symbol == nativeLang)[0].word:null
         return (
             <Modal
                 animationType="fade"
@@ -21,16 +48,16 @@ const ColoredModal = ({ index, modalVisible, setModalVisible, word, playSound, n
                     <View style={styles.modalView}>
 
                         <Text style={styles.modalText}>{word.word}</Text>
-                        <Text style={styles.modalText2}>{word.translations.filter(translation => translation.symbol == nativeLang)[0].translation}</Text>
+                        <Text style={styles.modalText2}>{translation}</Text>
 
                         <View style={styles.bottomContainer}>
                             <View style={styles.popupwp}>
                                 <TouchableOpacity onPress={() => playSound(API_URL + word.audioPath)} >
                                     <Image style={styles.popupimage} source={require('../../assets/soundyellow.png')} />
                                 </TouchableOpacity>
-                                <View>
+                                <TouchableOpacity onPress={() => like(word._id, word.symbol)}>
                                     <Image style={styles.popupimage} source={require('../../assets/begen.png')} />
-                                </View>
+                                </TouchableOpacity>
                             </View>
                         </View>
                         <Pressable

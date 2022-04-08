@@ -28,7 +28,6 @@ const Register = (props) => {
     const userInfo = { fullName: "", email: "", password: "", confirmPassword: "" }
     const navigation = useNavigation();
 
-    console.log(contextLang.state.merhaba);
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">
             <View style={GlobalStyles.container}>

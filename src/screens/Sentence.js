@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ImageBackgro
 import useCollection from "../hooks/useCollection";
 import { useNavigation } from '@react-navigation/native';
 import { Context as LangContext } from '../context/LangContext'
+import { Context as UserContext } from '../context/UserContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { API_URL } from '../../config'
 import { Audio } from 'expo-av';
@@ -15,39 +16,20 @@ const Sentence = ({ route }) => {
     const [collectionApi, sentences, errorMessage] = useCollection("sentences")
     const [wordsApi, coloredWords, wordsErrorMessage] = useCollection("coloredWords")
     const contextLang = useContext(LangContext)
+    const userContext = useContext(UserContext)
     const navigation = useNavigation();
 
-    const [targetLang, setTargetLang] = useState("en")
     const [modalVisible, setModalVisible] = useState(-1);
     const [visible, setVisible] = useState(false);
 
     const [hiddenCount, setHiddenCount] = useState(0)
-    const [level, setLevel] = useState();
 
     const { categoryId, categoryName } = route.params
 
-    useEffect(async () => {
-
-        await Audio.setAudioModeAsync({
-            staysActiveInBackground: true,
-            interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
-            shouldDuckAndroid: false,
-            playThroughEarpieceAndroid: false,
-            allowsRecordingIOS: false,
-            interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
-            playsInSilentModeIOS: true,
-        });
-
-        setTargetLang(await AsyncStorage.getItem("targetLang"))
-        setLevel(await AsyncStorage.getItem("level"))
-    }, [])
-
     let selection = sentences.filter(sentence => sentence.categoryId.includes(categoryId))
-    selection = selection.filter(select => select.level.includes(level))
+    selection = selection.filter(select => select.level.includes(userContext.state.level))
 
     const handleHidden = () => {
-        console.log(selection.length, " ", hiddenCount);
-
         if (selection.length - 1 == hiddenCount) {
             setHiddenCount(0)
         }
@@ -55,26 +37,26 @@ const Sentence = ({ route }) => {
             setHiddenCount(hiddenCount + 1)
         }
     }
+    const sound = new Audio.Sound()
 
     async function playSound(url) {
-        //await Audio.requestPermissionsAsync();
-        const { sound } = await Audio.Sound.createAsync({ uri: url },
-            { shouldPlay: true });
+        //setSoundObj(await Audio.Sound.createAsync({ uri: url },{ shouldPlay: true }))
+        await sound.unloadAsync();
+        await sound.loadAsync({ uri: url })
+        await sound.playAsync();
     }
 
     const like = async () => {
-
         try {
-            const email = await AsyncStorage.getItem("email")
             const token = await AsyncStorage.getItem("token");
             const config = {
                 headers: { Authorization: `Arflok: ${token}` }
             };
-            const response = await mainApi.post(`/data/pushData/users/${email}/likedSentences`, { likedSentenceId: selection[hiddenCount]._id, targetLangSymbol: selection[hiddenCount].symbol, symbol: contextLang.state.lang, sentence: selection[hiddenCount].sentence }, config)
+            const response = await mainApi.post(`/data/pushData/users/${userContext.state.email}/likedSentences`, { id: selection[hiddenCount]._id, symbol: userContext.state.targetLang }, config)
+            if (response.data.success && response.data.data.likedSentences.length > 0) {
+                userContext.updateUser("pushLikedSentence", { id: selection[hiddenCount]._id, symbol: userContext.state.targetLang, _id: response.data.data.likedSentences.slice(-1)[0]._id })
 
-            if (response.data.success) {
                 setVisible(true)
-                console.log("eklendi");
             }
 
         } catch (error) {
@@ -83,7 +65,7 @@ const Sentence = ({ route }) => {
         }
     }
     const hideDialog = () => setVisible(false);
-  
+
     return (
         <Provider>
             <View style={styles.container}>
@@ -96,11 +78,10 @@ const Sentence = ({ route }) => {
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(select) => select._id}
                         renderItem={({ item, index }) => {
-                            let flashCardTarget = item.flashCards.filter(flashCard => flashCard.symbol == targetLang)[0]
-                            let flashCardNative = item.flashCards.filter(flashCard => flashCard.symbol == contextLang.state.lang)[0]
-
+                            let flashCardTarget = item.flashCards.filter(flashCard => flashCard.symbol == userContext.state.targetLang)[0]
+                            let flashCardNative = item.flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0]
                             let flashCardColoredWords = coloredWords.filter(word => word.flashCardId == flashCardTarget._id)
-                            console.log(flashCardColoredWords, "$$$$$$$$$$$$$$$$$$$$$");
+
                             return (
                                 <>
                                     {index == hiddenCount ?
@@ -119,16 +100,15 @@ const Sentence = ({ route }) => {
 
                                                     {flashCardTarget.dailySentence.split(" ").map((sentence, index) => {
                                                         let word = flashCardColoredWords.filter(word => word.word == sentence)
-
                                                         if (word.length > 0) {
                                                             return (
                                                                 <View key={index}>
                                                                     <TouchableOpacity onPress={() => setModalVisible(index)}><Text style={styles.text3}>{word[0].word} </Text></TouchableOpacity>
-                                                                    <ColoredModal index={index} modalVisible={modalVisible} setModalVisible={setModalVisible}  word={word[0]} playSound={playSound} nativeLang={contextLang.state.lang}/>
+                                                                    <ColoredModal setVisible={setVisible} userContext={userContext} index={index} modalVisible={modalVisible} setModalVisible={setModalVisible} word={word[0]} playSound={playSound} nativeLang={userContext.state.nativeLang} />
                                                                 </View>
                                                             )
                                                         } else {
-                                                            return (<Text key={sentence} style={styles.text4}>{sentence} </Text>)
+                                                            return (<Text key={index} style={styles.text4}>{sentence} </Text>)
 
                                                         }
                                                     })}
@@ -207,10 +187,10 @@ const styles = StyleSheet.create({
         color: "#7DA0B9", fontSize: 18
     },
     text3: {
-        color: "#F6AE00", fontWeight: "500", fontSize: 18, marginTop: 50, textAlign: "center"
+        color: "#F6AE00", fontWeight: "500", fontSize: 14, marginTop: 50, textAlign: "center"
     },
     text4: {
-        color: "#7DA0B9", fontWeight: "500", fontSize: 18, marginTop: 50, textAlign: "center"
+        color: "#7DA0B9", fontWeight: "500", fontSize: 14, marginTop: 50, textAlign: "center"
     },
     footerview: {
         flex: 1, alignItems: "center"

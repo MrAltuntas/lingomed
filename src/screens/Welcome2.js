@@ -1,4 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+
+import { Context as LangContext } from '../context/LangContext'
+import { Context as UserContext } from '../context/UserContext'
+
 import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
 import LinearGradient from '../components/LinearGradient';
 import GlobalStyles from '../style/Global';
@@ -10,6 +14,9 @@ import { API_URL } from '../../config'
 import { RadioButton } from 'react-native-paper';
 import FormSubmitButton from "../components/Forms/FormSubmitButton";
 const Welcome2 = ({ route }) => {
+    const contextLang = useContext(LangContext)
+    const userContext = useContext(UserContext)
+
     const navigation = useNavigation();
     const { nativeLang } = route.params
     const [checked, setChecked] = React.useState("beginner");
@@ -18,11 +25,9 @@ const Welcome2 = ({ route }) => {
     const [collectionApi, langs, errorMessage] = useCollection("lang")
 
     const handleSubmit = async (userInit) => {
-        await AsyncStorage.setItem("targetLang", userInit.targetLang)
-        await AsyncStorage.setItem("nativeLang", userInit.nativeLang)
-        await AsyncStorage.setItem("level", userInit.level)
 
         const token = await AsyncStorage.getItem("token");
+        await AsyncStorage.setItem("isUserInit", "true");
         const config = {
             headers: { Authorization: `Arflok: ${token}` }
         };
@@ -30,6 +35,7 @@ const Welcome2 = ({ route }) => {
         try {
             const response = await mainApi.post('/data/initUser', userInit, config)
             if (response.data.success == true) {
+                userContext.updateUser("update", {targetLang: userInit.targetLang, nativeLang: userInit.nativeLang, level: userInit.level})
                 navigation.navigate('MainStackScreen')
             }
         } catch (error) {
