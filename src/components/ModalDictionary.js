@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import mainApi from "../api/mainApi";
 
 const ModalDictionary = ({coloredObj={},colored=false,userContext, index, modalVisible, setModalVisible, word, playSound, nativeLang, targetLang, showDialog, id, deleteData = false, likedWordId, collectionApiObj }) => {
-    console.log(word);
     const like = async () => {
 
         try {
@@ -55,6 +54,7 @@ const ModalDictionary = ({coloredObj={},colored=false,userContext, index, modalV
         )
     } else {
         let audioPath = colored ? coloredObj.audioPath:word.filter(word => word.symbol == targetLang)[0].audioPath
+
         return (
             <Modal
                 animationType="fade"
@@ -69,7 +69,7 @@ const ModalDictionary = ({coloredObj={},colored=false,userContext, index, modalV
                     <View style={styles.modalView}>
 
                         <Text style={styles.modalText}>{colored ? coloredObj.word:word.filter(word => word.symbol == targetLang)[0].word}</Text>
-                        <Text style={styles.modalText2}>{word.filter(word => word.symbol == nativeLang)[0].word}</Text>
+                        <Text style={styles.modalText2}>{colored ? coloredObj.translations.filter(word => word.symbol == nativeLang)[0].word:word.filter(word => word.symbol == nativeLang)[0].word}</Text>
 
                         <View style={styles.bottomContainer}>
                             <View style={styles.popupwp}>

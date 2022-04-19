@@ -85,7 +85,7 @@ const Profile = () => {
             // Assume "photo" is the name of the form field the server expects
             formData.append('image', { uri: localUri, name: filename, type });
 
-            const reponse = await fetch("http://192.168.0.21:5001/api/clientUploads/single", {
+            const reponse = await fetch("https://app.lingomed.net/api/clientUploads/single", {
                 method: 'POST',
                 body: formData,
                 headers: {

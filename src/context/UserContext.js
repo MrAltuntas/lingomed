@@ -24,7 +24,7 @@ const userReducer = (state, action) => {
         case "pushLikedSentence":
             return Object.assign({}, state, { likedSentences: state.likedSentences.concat(action.payload) })
 
-        case "removeLikedSentence":{
+        case "removeLikedSentence": {
             let newLikedSentences = []
             state.likedSentences.map(likedSentence => {
                 if (likedSentence._id.localeCompare(action.payload) == 0) {
@@ -49,6 +49,8 @@ const userReducer = (state, action) => {
             })
             return Object.assign({}, state, { likedWords: newLikedWords })
 
+        case "finishedCategories":
+            return Object.assign({}, state, { finishedCategories: state.finishedCategories.concat(action.payload) })
         case "deafult":
             return deafultUserInfo
 

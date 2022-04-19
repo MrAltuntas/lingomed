@@ -86,6 +86,13 @@ const LikedWords = () => {
         }
     }
     let data = collectionWords.concat(collectionColored)
+
+    if(!data){
+        return(
+            <ActivityIndicator />
+        )
+    }
+
     return (
         <Provider>
             <View style={styles.container}>
@@ -99,7 +106,6 @@ const LikedWords = () => {
                             showsHorizontalScrollIndicator={false}
                             keyExtractor={(selectedWords) => selectedWords._id}
                             renderItem={({ item, index }) => {
-                                console.log(item);
                                 return (
                                     <>
                                         {item.flashCardId ? item.symbol == targetLang.symbol ?
@@ -108,7 +114,7 @@ const LikedWords = () => {
                                                 <TouchableOpacity onPress={() => setModalVisible(index)} style={[styles.wordsInnerCover, { flex: 8 }]} >
                                                     <Text style={styles.wordText}>{item.word}</Text>
                                                     <ModalDictionary coloredObj={item} colored={true} index={index} showDialog={showDialog} modalVisible={modalVisible} setModalVisible={setModalVisible} likedWordId={targetLang.likedWordIds[index]} id={item._id} word={item.translations}
-                                                        playSound={playSound} nativeLang={contextLang.state.lang} targetLang={targetLang.symbol} deleteData={true} />
+                                                        playSound={playSound} nativeLang={userContext.state.nativeLang} targetLang={targetLang.symbol} deleteData={true} />
                                                 </TouchableOpacity>
                                                 <TouchableOpacity onPress={() => deleteWord(targetLang.likedWordIds[index])} style={[styles.wordsInnerCover, { flex: 1 }]}>
                                                     <Icon name="text-box-remove" size={26} />
@@ -121,7 +127,7 @@ const LikedWords = () => {
                                                 <TouchableOpacity onPress={() => setModalVisible(index)} style={[styles.wordsInnerCover, { flex: 8 }]} >
                                                     <Text style={styles.wordText}>{item.words.filter(word => word.symbol == targetLang.symbol)[0].word}</Text>
                                                     <ModalDictionary index={index} showDialog={showDialog} modalVisible={modalVisible} setModalVisible={setModalVisible} likedWordId={targetLang.likedWordIds[index]} id={item._id} word={item.words}
-                                                        playSound={playSound} nativeLang={contextLang.state.lang} targetLang={targetLang.symbol} deleteData={true} />
+                                                        playSound={playSound} nativeLang={userContext.state.nativeLang} targetLang={targetLang.symbol} deleteData={true} />
                                                 </TouchableOpacity>
                                                 <TouchableOpacity onPress={() => deleteWord(targetLang.likedWordIds[index])} style={[styles.wordsInnerCover, { flex: 1 }]}>
                                                     <Icon name="text-box-remove" size={26} />

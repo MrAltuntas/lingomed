@@ -21,6 +21,7 @@ import { Audio } from 'expo-av';
 
 
 //screens
+import Home from './src/screens/Home';
 import Profile from './src/screens/Profile';
 import Login from './src/screens/Login';
 import ForgetPassword from './src/screens/ForgetPassword'
@@ -33,6 +34,9 @@ import Dictionary from './src/screens/Dictionary';
 import LikedWords from './src/screens/LikedWords';
 import LikedSentence from './src/screens/LikedSentence';
 import LikedSentencesDetail from './src/screens/LikedSentenceDetail';
+import Exams from './src/screens/Exams';
+import ExamsCategories from './src/screens/ExamsCategories';
+import ExamsFlashCard from './src/screens/ExamsFlashCard';
 
 //sub screens
 import Competitors from './src/screens/subscreens/Competitors';
@@ -95,7 +99,8 @@ const MainTabScreen = ({ navigaiton, route }) => {
 
 const MainStackScreen = () => {
   return (
-    <Stack.Navigator initialRouteName="Categories" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }}>
+    <Stack.Navigator initialRouteName="Home" screenOptions={{ drawerPosition: "right", header: ({ scene, navigation }) => (<HeaderWithBell navigation={navigation} />) }}>
+      <Stack.Screen options={{ title: 'Home' }} name="Home" component={Home} />
       <Stack.Screen options={{ title: 'Categories' }} name="Categories" component={Categories} />
       <Stack.Screen options={{ title: 'Sentence' }} name="Sentence" component={Sentence} />
       <Stack.Screen options={{ title: 'Question' }} name="Question" component={Question} />
@@ -108,6 +113,9 @@ const MainStackScreen = () => {
       <Stack.Screen options={{ title: 'LikedWords' }} name="LikedWords" component={LikedWords} />
       <Stack.Screen options={{ title: 'LikedSentence' }} name="LikedSentence" component={LikedSentence} />
       <Stack.Screen options={{ title: 'LikedSentencesDetail' }} name="LikedSentencesDetail" component={LikedSentencesDetail} />
+      <Stack.Screen options={{ title: 'Exams' }} name="Exams" component={Exams} />
+      <Stack.Screen options={{ title: 'ExamsCategories' }} name="ExamsCategories" component={ExamsCategories} />
+      <Stack.Screen options={{ title: 'ExamsFlashCard' }} name="ExamsFlashCard" component={ExamsFlashCard} />
     </Stack.Navigator>
   );
 }

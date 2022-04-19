@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ImageBackground, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ImageBackground } from 'react-native'
 import useCollection from "../hooks/useCollection";
-import useCollectionById from "../hooks/useCollectionById";
 import { useNavigation } from '@react-navigation/native';
 import { Context as LangContext } from '../context/LangContext'
 import { Context as UserContext } from '../context/UserContext'
@@ -14,13 +13,10 @@ import { Button, Paragraph, Dialog, Portal, Provider } from 'react-native-paper'
 import ColoredModal from "../components/ColoredModal";
 
 const Sentence = ({ route }) => {
-    const { id } = route.params
-
-    const [collectionApi, sentence, errorMessage] = useCollectionById("sentences", id)
-    const [wordsApi, coloredWords, wordsErrorMessage] = useCollection("coloredWords")
-
+    const [collectionApi, examSentences, errorMessage] = useCollection("examSentences")
     const contextLang = useContext(LangContext)
     const userContext = useContext(UserContext)
+
     const navigation = useNavigation();
 
     const [modalVisible, setModalVisible] = useState(-1);
@@ -28,6 +24,11 @@ const Sentence = ({ route }) => {
 
     const [hiddenCount, setHiddenCount] = useState(0)
 
+    const { examId, examName, examsCategoryId, examsCategoryName } = route.params
+
+
+    let selection = examSentences.filter(sentence => sentence.examId == examId)
+    selection = selection.filter(sentence => sentence.categoryId.includes(examsCategoryId))
 
     const handleHidden = () => {
         if (selection.length - 1 == hiddenCount) {
@@ -41,6 +42,7 @@ const Sentence = ({ route }) => {
     const sound = new Audio.Sound()
 
     async function playSound(url) {
+        //setSoundObj(await Audio.Sound.createAsync({ uri: url },{ shouldPlay: true }))
         await sound.unloadAsync();
         await sound.loadAsync({ uri: url })
         await sound.playAsync();
@@ -66,69 +68,59 @@ const Sentence = ({ route }) => {
     }
     const hideDialog = () => setVisible(false);
 
-    console.log(id ,sentence);
-
-    if(!sentence){
-        return(
-            <ActivityIndicator />
-        )
-    }
-    let flashCardTarget = sentence.flashCards.filter(flashCard => flashCard.symbol == userContext.state.targetLang)[0]
-    let flashCardNative = sentence.flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0]
-    let flashCardColoredWords = coloredWords.filter(word => word.flashCardId == flashCardTarget._id)
     return (
         <Provider>
             <View style={styles.container}>
                 <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30, }}>
-                    <Text style={styles.texttitle}>{contextLang.state.lessons}</Text>
+                    <Text style={styles.texttitle}>{contextLang.state.lessons} / {examsCategoryName}</Text>
                 </View>
                 <View style={styles.fview}>
+                    <FlatList style={{ width: "100%" }}
+                        data={selection}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(select) => select._id}
+                        renderItem={({ item, index }) => {
+                            let flashCardTarget = item.flashCards.filter(flashCard => flashCard.symbol == userContext.state.targetLang)[0]
+                            let flashCardNative = item.flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0]
 
-                    <View hidden={true} style={{ paddingTop: 20 }}>
-                        <ImageBackground source={{ uri: API_URL + sentence.img }} imageStyle={styles.br10} resizeMode="stretch" style={styles.bosimage}>
-                            <View style={styles.soundicon1}>
-                                <View style={styles.soundiconcircle} >
-                                    <TouchableOpacity onPress={() => playSound(API_URL + flashCardTarget.audioPath)} style={styles.mt14}><Image source={require('../../assets/sound.png')} /></TouchableOpacity>
-                                </View>
-                            </View>
-                        </ImageBackground>
-                        <View style={styles.textview}>
-                            <Text style={styles.text1}>{flashCardTarget.sentence}</Text>
-                            <Text style={styles.text2}>{flashCardNative.sentence}</Text>
-                            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-
-                                {flashCardTarget.dailySentence.split(" ").map((sentence, index) => {
-                                    let word = flashCardColoredWords.filter(word => word.word == sentence)
-                                    if (word.length > 0) {
-                                        return (
-                                            <View key={index}>
-                                                <TouchableOpacity onPress={() => setModalVisible(index)}><Text style={styles.text3}>{word[0].word} </Text></TouchableOpacity>
-                                                <ColoredModal setVisible={setVisible} userContext={userContext} index={index} modalVisible={modalVisible} setModalVisible={setModalVisible} word={word[0]} playSound={playSound} nativeLang={userContext.state.nativeLang} />
+                            return (
+                                <>
+                                    {index == hiddenCount ?
+                                        <View hidden={true} style={{ paddingTop: 50, flexDirection: "column", justifyContent: "center" }}>
+                                            <View style={{ flexDirection: "row", justifyContent: "center"}}>
+                                                <View style={styles.soundiconcircle} >
+                                                    <TouchableOpacity onPress={() => playSound(API_URL + flashCardTarget.audioPath)} style={styles.mt14}><Image source={require('../../assets/sound.png')} /></TouchableOpacity>
+                                                </View>
                                             </View>
-                                        )
-                                    } else {
-                                        return (<Text key={index} style={styles.text4}>{sentence} </Text>)
 
-                                    }
-                                })}
-                            </View>
+                                            <View style={[styles.textview, {marginTop: 50}]}>
+                                                <Text style={styles.text1}>{flashCardTarget.sentence}</Text>
+                                                <Text style={styles.text2}>{flashCardNative.sentence}</Text>
+                                            </View>
 
-                        </View>
-
-                        {/* <TouchableOpacity onPress={() => navigation.navigate("Question")} >
+                                            {/* <TouchableOpacity onPress={() => navigation.navigate("Question")} >
                                                 <Text style={{ textAlign: "center", marginTop: 25 }}>Quiz Sayfasına Geç</Text>
                                             </TouchableOpacity> */}
 
-                    </View>
-
+                                        </View>
+                                        : null}
+                                </>
+                            )
+                        }}
+                    />
                 </View>
 
                 <View style={styles.bottomContainer}>
                     <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
-                        <TouchableOpacity onPress={() => playSound(API_URL + flashCardTarget.dailyAudioPath)} style={styles.footerview}>
+                        <TouchableOpacity onPress={() => playSound(API_URL + selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.targetLang)[0].dailyAudioPath)} style={styles.footerview}>
                             <Image style={styles.footerimage} source={require('../../assets/soundyellow.png')} />
                         </TouchableOpacity>
-                        
+                        <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
+                            <Image style={styles.footerimage} source={require('../../assets/change.png')} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.footerview} onPress={() => like()}>
+                            <Image style={styles.footerimage} source={require('../../assets/begen.png')} />
+                        </TouchableOpacity>
                     </ImageBackground>
                 </View>
 
@@ -152,8 +144,7 @@ const Sentence = ({ route }) => {
 
 const styles = StyleSheet.create({
     textview: {
-        alignItems: "center",
-        marginTop: 50
+        alignItems: "center"
     },
     mt14: {
         marginTop: 14
@@ -161,7 +152,6 @@ const styles = StyleSheet.create({
     soundiconcircle: {
         width: 70,
         height: 70,
-        lineHeight: 0,
         alignItems: 'center',
         borderRadius: 100,
         backgroundColor: 'orange'

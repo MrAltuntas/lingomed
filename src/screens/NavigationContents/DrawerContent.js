@@ -27,7 +27,7 @@ export function DrawerContent(props) {
     const { signOut } = useContext(AuthContext2)
     const contextLang = useContext(LangContext)
     const userContext = useContext(UserContext)
-
+    
     const paperTheme = useTheme();
 
     return (
@@ -70,7 +70,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.homePage}
-                            onPress={() => { props.navigation.navigate('Categories') }}
+                            onPress={() =>  props.navigation.navigate('Home')}
                         />
                         <DrawerItem
                             icon={({ color, size }) => (
@@ -116,7 +116,7 @@ export function DrawerContent(props) {
                             label="Liked Sentence"
                             onPress={() => {props.navigation.navigate('LikedSentence')}}
                         />
-                        {/*<DrawerItem 
+                        <DrawerItem 
                             icon={({color, size}) => (
                                 <Icon 
                                 name="account-check-outline" 
@@ -124,9 +124,9 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Support"
-                            onPress={() => {props.navigation.navigate('SupportScreen')}}
-                        /> */}
+                            label="Exams"
+                            onPress={() => {props.navigation.navigate('Exams')}}
+                        />
                     </Drawer.Section>
                     {/* <Drawer.Section title="Preferences">
                         <TouchableRipple onPress={() => {toggleTheme()}}>

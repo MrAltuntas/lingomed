@@ -31,6 +31,7 @@ const Sentence = ({ route }) => {
 
     const handleHidden = () => {
         if (selection.length - 1 == hiddenCount) {
+            navigation.navigate("Question", {categoryId})
             setHiddenCount(0)
         }
         else if (selection.length > hiddenCount) {
@@ -116,9 +117,9 @@ const Sentence = ({ route }) => {
 
                                             </View>
 
-                                            <TouchableOpacity onPress={() => navigation.navigate("Question")} >
+                                            {/* <TouchableOpacity onPress={() => navigation.navigate("Question")} >
                                                 <Text style={{ textAlign: "center", marginTop: 25 }}>Quiz Sayfasına Geç</Text>
-                                            </TouchableOpacity>
+                                            </TouchableOpacity> */}
 
                                         </View>
                                         : null}
@@ -127,9 +128,10 @@ const Sentence = ({ route }) => {
                         }}
                     />
                 </View>
+                
                 <View style={styles.bottomContainer}>
                     <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
-                        <TouchableOpacity style={styles.footerview}>
+                        <TouchableOpacity onPress={() => playSound(API_URL + selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.targetLang)[0].dailyAudioPath)} style={styles.footerview}>
                             <Image style={styles.footerimage} source={require('../../assets/soundyellow.png')} />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
