@@ -10,7 +10,6 @@ import { Audio } from 'expo-av';
 import mainApi from "../api/mainApi";
 
 import { Button, Paragraph, Dialog, Portal, Provider } from 'react-native-paper';
-import ColoredModal from "../components/ColoredModal";
 
 const Sentence = ({ route }) => {
     const [collectionApi, examSentences, errorMessage] = useCollection("examSentences")
@@ -141,7 +140,6 @@ const Sentence = ({ route }) => {
     )
 }
 
-
 const styles = StyleSheet.create({
     textview: {
         alignItems: "center"
@@ -221,7 +219,5 @@ const styles = StyleSheet.create({
         height: 32
     }
 });
-
-
 
 export default Sentence

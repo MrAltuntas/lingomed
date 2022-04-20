@@ -1,18 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
-
 import { useNavigation } from '@react-navigation/native';
 
 import { Context as LangContext } from '../context/LangContext'
 import { Context as UserContext } from '../context/UserContext'
 
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Badge } from 'react-native-paper';
 
 import useCollection from "../hooks/useCollection";
-import { Badge } from 'react-native-paper';
 import LingomedBottomMenu from "../components/NavigationMenus/BottomMenu/LingomedBottomMenu";
-import SetLang from "../helpers/SetLang";
-import SetUserInfo from "../helpers/SetUserInfo";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Categories = () => {
     const contextLang = useContext(LangContext)

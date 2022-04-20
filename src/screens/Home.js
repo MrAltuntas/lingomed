@@ -1,17 +1,11 @@
 import React, { useState, useContext, useEffect } from "react";
 
+import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
+
+import { Context as UserContext } from '../context/UserContext'
 import { Context as LangContext } from '../context/LangContext'
 
-import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
-import LinearGradient from '../components/LinearGradient';
-import GlobalStyles from '../style/Global';
-import FormSubmitButton from '../components/Forms/FormSubmitButton';
-
-import { useNavigation } from '@react-navigation/native';
-import { backgroundColor } from "react-native/Libraries/Components/View/ReactNativeStyleAttributes";
-import { API_URL } from '../../config'
-import useCollection from "../hooks/useCollection";
-import { Context as UserContext } from '../context/UserContext'
 import SetLang from "../helpers/SetLang";
 import SetUserInfo from "../helpers/SetUserInfo";
 import LingomedBottomMenu from "../components/NavigationMenus/BottomMenu/LingomedBottomMenu";
@@ -21,7 +15,6 @@ const Home = () => {
     const userContext = useContext(UserContext)
 
     const navigation = useNavigation();
-    const [nativeLang, setNativeLang] = useState(contextLang.state.lang);
 
     useEffect(async () => {
         await SetLang(contextLang)
