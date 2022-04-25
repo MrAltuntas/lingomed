@@ -55,7 +55,7 @@ const Welcome2 = ({ route }) => {
     return (
         <View style={styles.container}>
             <View style={{ flex: 1 }}>
-                <Text style={styles.texttitle}>Hangi Dili Öğrenmek İstiyorsunuz</Text>
+                <Text style={styles.texttitle}>{contextLang.state.whicLanguage}</Text>
             </View>
             <View style={{ flex: 4 }}>
 
@@ -86,7 +86,7 @@ const Welcome2 = ({ route }) => {
                             value="beginner"
                             status={checked === 'beginner' ? 'checked' : 'unchecked'}
                             onPress={() => setChecked('beginner')}/>
-                        <Text style={styles.rtext}>Başlagıç</Text>
+                        <Text style={styles.rtext}>{contextLang.state.beginner}</Text>
 
                     </TouchableOpacity>
 
@@ -96,7 +96,7 @@ const Welcome2 = ({ route }) => {
                             status={checked === 'intermediate' ? 'checked' : 'unchecked'}
                             onPress={() => setChecked('intermediate')}
                         />
-                        <Text style={styles.rtext}>Orta Düzey</Text>
+                        <Text style={styles.rtext}>{contextLang.state.intermediate}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{ flexDirection: "row", justifyContent: "center", marginTop: 20 }} onPress={() => setChecked('advance')}>
@@ -105,13 +105,13 @@ const Welcome2 = ({ route }) => {
                             status={checked === 'advance' ? 'checked' : 'unchecked'}
                             onPress={() => setChecked('advance')}
                         />
-                        <Text style={styles.rtext}>İleri Düzey</Text>
+                        <Text style={styles.rtext}>{contextLang.state.advance}</Text>
                     </TouchableOpacity>
 
                 </View>
             </View>
             <View style={{ flex: 1, justifyContent: "center" }}>
-                <FormSubmitButton title='Seç ve Devam Et' onPress={() => handleSubmit({ targetLang, level: checked, nativeLang })} />
+                <FormSubmitButton title={contextLang.state.chooseGo} onPress={() => handleSubmit({ targetLang, level: checked, nativeLang })} />
             </View>
         </View >
     )

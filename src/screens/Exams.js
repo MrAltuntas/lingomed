@@ -37,7 +37,7 @@ const Exams = () => {
         <View style={styles.container}>
 
             <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30, }}>
-                <Text style={styles.texttitle}>{contextLang.state.lessons}</Text>
+                <Text style={styles.texttitle}>{contextLang.state.exams}</Text>
             </View>
             <View style={{ flex: 4, padding: 20, flexDirection: "row" }}>
 
@@ -60,7 +60,7 @@ const Exams = () => {
                 />
             </View>
 
-            <LingomedBottomMenu contextLang={contextLang} navigation={navigation}/>
+            {/* <LingomedBottomMenu contextLang={contextLang} navigation={navigation}/> */}
 
         </View>
     )

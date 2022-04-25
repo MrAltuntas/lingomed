@@ -14,12 +14,7 @@ import LinearGradient from '../components/LinearGradient';
 
 import GlobalStyles from '../style/Global';
 
-let validationSchema = yup.object().shape({
-    fullName: yup.string().trim().min(3, 'İsiminizi kontrol ediniz!').required('İsim giriniz!'),
-    email: yup.string().email('Mailinizi kontrol ediniz!').required('Mail giriniz!'),
-    password: yup.string().trim().min(6, 'Şifreniz çok kısa!').required('Şifre giriniz!'),
-    confirmPassword: yup.string().equals([yup.ref('password'), null], "Şifre eşleşmiyor!"),
-});
+
 
 const Register = (props) => {
     const contextLang = useContext(LangContext)
@@ -28,6 +23,12 @@ const Register = (props) => {
     const userInfo = { fullName: "", email: "", password: "", confirmPassword: "" }
     const navigation = useNavigation();
 
+    let validationSchema = yup.object().shape({
+        fullName: yup.string().trim().min(3, contextLang.state.unCorrectName).required(contextLang.state.enterName),
+        email: yup.string().email(contextLang.state.unCorrectEmail).required(contextLang.state.enterEmail),
+        password: yup.string().trim().min(6, contextLang.state.unCorrectPassword).required(contextLang.state.enterPassword),
+        confirmPassword: yup.string().equals([yup.ref('password'), null], contextLang.state.enterPassword),
+    });
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">
             <View style={GlobalStyles.container}>
@@ -41,7 +42,7 @@ const Register = (props) => {
                             <>
                                 <FormInput value={fullName}
                                     style={GlobalStyles.input}
-                                    placeholder="Ad & Soyad"
+                                    placeholder={contextLang.state.fullName}
                                     autoCapitalize={"none"}
                                     error={errors.fullName}
                                     placeholderTextColor="#9D9FA0"
@@ -76,7 +77,7 @@ const Register = (props) => {
 
                                 <FormSubmitButton
                                     onPress={handleSubmit}
-                                    title='KAYIT OL' />
+                                    title={contextLang.state.register} />
                                 {/* {state.errorMessage ? <Text>{state.errorMessage}</Text> : null} */}
                             </>
                         )
@@ -85,7 +86,7 @@ const Register = (props) => {
                 {/* <Button title="login" onPress={() => navigation.navigate("Login")} /> */}
                 <View style={[styles.yho, { flexDirection: "row"}]}>                    
                 <Text onPress={() => navigation.navigate("Login")} style={[GlobalStyles.titlewhite,{ textAlign:'center' }]}>
-                    <Text style={[styles.textorange, {textAlign:'center',marginTop:15}]}>Giriş Yap</Text>
+                    <Text style={[styles.textorange, {textAlign:'center',marginTop:15}]}>{contextLang.state.login}</Text>
                 </Text>
             </View>
             </View>

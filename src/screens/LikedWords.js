@@ -66,6 +66,7 @@ const LikedWords = () => {
     }
 
     const deleteWord = async (id) => {
+        console.log(id);
         try {
             const token = await AsyncStorage.getItem("token");
 
@@ -77,11 +78,11 @@ const LikedWords = () => {
             if (response.data.success) {
                 userContext.updateUser("removeLikedWord", id)
                 showDialog()
-                console.log("eklendi");
+                console.log(contextLang.state.removedLiked);
             }
 
         } catch (error) {
-            alert("Favori Cümlelere Eklenemedi!!!")
+            alert(contextLang.state.anError)
             console.log(error.response.data);
         }
     }
@@ -104,7 +105,7 @@ const LikedWords = () => {
                         <FlatList
                             data={data}
                             showsHorizontalScrollIndicator={false}
-                            keyExtractor={(selectedWords) => selectedWords._id}
+                            keyExtractor={(selectedWords, index) => index}
                             renderItem={({ item, index }) => {
                                 return (
                                     <>
@@ -145,14 +146,10 @@ const LikedWords = () => {
             </View>
             <View>
                 <Portal>
-                    <Dialog visible={visible} onDismiss={hideDialog}>
-                        <Dialog.Title>Favori</Dialog.Title>
+                    <Dialog style={styles.modalView} visible={visible} onDismiss={hideDialog}>
                         <Dialog.Content>
-                            <Paragraph>{contextLang.state.addedToFavori}</Paragraph>
+                            <Paragraph style={styles.modalText}>{contextLang.state.removedLiked}</Paragraph>
                         </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button onPress={hideDialog}>Done</Button>
-                        </Dialog.Actions>
                     </Dialog>
                 </Portal>
             </View>
@@ -162,6 +159,26 @@ const LikedWords = () => {
 }
 
 const styles = StyleSheet.create({
+    modalText: {
+        color: "#fff",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalView: {
+        margin: 0,
+        backgroundColor: "#1566B1",
+        borderRadius: 20,
+        padding: 5,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
     container: {
         flex: 1,
         padding: 20,

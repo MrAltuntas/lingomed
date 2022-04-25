@@ -31,7 +31,7 @@ const Sentence = ({ route }) => {
 
     const handleHidden = () => {
         if (selection.length - 1 == hiddenCount) {
-            navigation.navigate("Question", { categoryId })
+            navigation.navigate("ExamsCategories", { examId, examName })
             setHiddenCount(0)
         }
         else if (selection.length > hiddenCount) {
@@ -71,7 +71,7 @@ const Sentence = ({ route }) => {
         <Provider>
             <View style={styles.container}>
                 <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30, }}>
-                    <Text style={styles.texttitle}>{contextLang.state.lessons} / {examsCategoryName}</Text>
+                    <Text style={styles.texttitle}>{contextLang.state.exams} / {examsCategoryName}</Text>
                 </View>
                 <View style={styles.fview}>
                     <FlatList style={{ width: "100%" }}
@@ -111,30 +111,12 @@ const Sentence = ({ route }) => {
 
                 <View style={styles.bottomContainer}>
                     <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
-                        <TouchableOpacity onPress={() => playSound(API_URL + selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.targetLang)[0].dailyAudioPath)} style={styles.footerview}>
-                            <Image style={styles.footerimage} source={require('../../assets/soundyellow.png')} />
-                        </TouchableOpacity>
                         <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
-                            <Image style={styles.footerimage} source={require('../../assets/change.png')} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.footerview} onPress={() => like()}>
-                            <Image style={styles.footerimage} source={require('../../assets/begen.png')} />
+                            <Image style={styles.footerimage} source={require('../../assets/next.png')} />
                         </TouchableOpacity>
                     </ImageBackground>
                 </View>
 
-
-                <Portal>
-                    <Dialog visible={visible} onDismiss={hideDialog}>
-                        <Dialog.Title>Favori</Dialog.Title>
-                        <Dialog.Content>
-                            <Paragraph>{contextLang.state.addedToFavori}</Paragraph>
-                        </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button onPress={hideDialog}>Ok</Button>
-                        </Dialog.Actions>
-                    </Dialog>
-                </Portal>
             </View>
         </Provider>
     )

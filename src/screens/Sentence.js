@@ -21,6 +21,7 @@ const Sentence = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(-1);
     const [visible, setVisible] = useState(false);
+    const [visibleTranslation, setVisibleTranslation] = useState({visible: false, translation:""});
 
     const [hiddenCount, setHiddenCount] = useState(0)
 
@@ -67,6 +68,11 @@ const Sentence = ({ route }) => {
     }
     const hideDialog = () => setVisible(false);
 
+    const hideDialogTranslation = () => setVisibleTranslation({visible: false, translation:""})
+    const handleTranslationDaily = () => {
+        //console.log(selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0].dailySentence);
+        setVisibleTranslation({visible: true, translation: selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0].dailySentence})
+    }
     return (
         <Provider>
             <View style={styles.container}>
@@ -134,25 +140,32 @@ const Sentence = ({ route }) => {
                         <TouchableOpacity onPress={() => playSound(API_URL + selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.targetLang)[0].dailyAudioPath)} style={styles.footerview}>
                             <Image style={styles.footerimage} source={require('../../assets/soundyellow.png')} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
+                        <TouchableOpacity style={styles.footerview}  onPress={() => handleTranslationDaily()} >
                             <Image style={styles.footerimage} source={require('../../assets/change.png')} />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.footerview} onPress={() => like()}>
                             <Image style={styles.footerimage} source={require('../../assets/begen.png')} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
+                            <Image style={styles.footerimage} source={require('../../assets/next.png')} />
                         </TouchableOpacity>
                     </ImageBackground>
                 </View>
 
 
                 <Portal>
-                    <Dialog visible={visible} onDismiss={hideDialog}>
-                        <Dialog.Title>Favori</Dialog.Title>
+                    <Dialog style={styles.modalView} visible={visible} onDismiss={hideDialog}>
                         <Dialog.Content>
-                            <Paragraph>{contextLang.state.addedToFavori}</Paragraph>
+                            <Paragraph style={styles.modalText}>{contextLang.state.addedToFavori}</Paragraph>
                         </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button onPress={hideDialog}>Ok</Button>
-                        </Dialog.Actions>
+                    </Dialog>
+                </Portal>
+
+                <Portal>
+                    <Dialog style={styles.modalView} visible={visibleTranslation.visible} onDismiss={hideDialogTranslation}>
+                        <Dialog.Content>
+                            <Paragraph style={styles.modalText}>{visibleTranslation.translation}</Paragraph>
+                        </Dialog.Content>
                     </Dialog>
                 </Portal>
             </View>
@@ -162,6 +175,26 @@ const Sentence = ({ route }) => {
 
 
 const styles = StyleSheet.create({
+    modalText: {
+        color: "#fff",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalView: {
+        margin: 0,
+        backgroundColor: "#1566B1",
+        borderRadius: 20,
+        padding: 5,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
     textview: {
         alignItems: "center",
         marginTop: 50

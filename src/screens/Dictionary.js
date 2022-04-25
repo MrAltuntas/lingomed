@@ -89,7 +89,7 @@ const Dictionary = () => {
                         <Icon style={styles.searchIcon} name="magnify" size={20} color="#000" />
                         <TextInput
                             style={styles.input}
-                            placeholder="Aranacak Kelimeyi Giriniz"
+                            placeholder={contextLang.state.searchWord}
                             onChangeText={(searchString) => handleSearch(searchString)}
                             underlineColorAndroid="transparent"
 
@@ -142,14 +142,10 @@ const Dictionary = () => {
             </View>
             <View>
                 <Portal>
-                    <Dialog visible={visible} onDismiss={hideDialog}>
-                        <Dialog.Title>Favori</Dialog.Title>
+                    <Dialog style={styles.modalView} visible={visible} onDismiss={hideDialog}>
                         <Dialog.Content>
-                            <Paragraph>{contextLang.state.addedToFavori}</Paragraph>
+                            <Paragraph style={styles.modalText}>{contextLang.state.addedToFavori}</Paragraph>
                         </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button onPress={hideDialog}>Done</Button>
-                        </Dialog.Actions>
                     </Dialog>
                 </Portal>
             </View>
@@ -159,6 +155,26 @@ const Dictionary = () => {
 }
 
 const styles = StyleSheet.create({
+    modalText: {
+        color: "#fff",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalView: {
+        margin: 0,
+        backgroundColor: "#1566B1",
+        borderRadius: 20,
+        padding: 5,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
     container: {
         flex: 1,
         padding: 20,

@@ -37,6 +37,7 @@ import LikedSentencesDetail from './src/screens/LikedSentenceDetail';
 import Exams from './src/screens/Exams';
 import ExamsCategories from './src/screens/ExamsCategories';
 import ExamsFlashCard from './src/screens/ExamsFlashCard';
+import Payment from './src/screens/Payment';
 
 //sub screens
 import Competitors from './src/screens/subscreens/Competitors';
@@ -116,6 +117,7 @@ const MainStackScreen = () => {
       <Stack.Screen options={{ title: 'Exams' }} name="Exams" component={Exams} />
       <Stack.Screen options={{ title: 'ExamsCategories' }} name="ExamsCategories" component={ExamsCategories} />
       <Stack.Screen options={{ title: 'ExamsFlashCard' }} name="ExamsFlashCard" component={ExamsFlashCard} />
+      <Stack.Screen options={{ title: 'Payment' }} name="Payment" component={Payment} />
     </Stack.Navigator>
   );
 }

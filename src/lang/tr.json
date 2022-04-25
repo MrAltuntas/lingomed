@@ -9,12 +9,15 @@
     "ortaSinif":"Orta Sınıf",
     "ekonomik":"Ekonomik",
 
+    "or":"veya",
+
     "lessons":"Dersler",
+    "exams":"Sınavlar",
     "writeToUs":"Bize Yazın",
     "friends":"Arkadaşlar",
     "statistics":"İstatistik",
     "competitors":"Rakipler",
-    "addedToFavori":"Cümle favorilere eklendi!",
+    "addedToFavori":"Favorilere eklendi!",
     "save":"KAYDET",
     "selectLang":"Dil Seçimi : ",
     "voiceEffect": "Ses Efekti",
@@ -22,6 +25,44 @@
     "homePage":"Ana Sayfa",
     "profile":"Profil",
     "logOut":"Çıkış Yap",
-    "dictionary":"Sözlük"
+    "dictionary":"Sözlük",
+    "userUpdated":"Kullanıcı güncellendi!",
 
+    "forgetPassword": "Şifremi unuttum",
+    "createNewAccount": "Yeni Hesap Oluştur",
+    "fullName":"Ad & Soyad",
+    "register":"KAYIT OL",
+    "login":"GİRİŞ YAP",
+    "password":"Şifre",
+    "resetPasswordLink":"Şifre sıfırlama linki mail adresinize gönderildi",
+    "unCorrectEmail":"Mail adresi düzgün değil!",
+    "unCorrectPassword":"Şifreniz kısa!",
+    "unCorrectName":"İsminiz düzgün giriniz!",
+    "enterEmail":"Mail adresinizi giriniz!",
+    "enterPassword":"Şifre giriniz.",
+    "enterName":"İsminizi giriniz",
+
+    "anError":"Bir hata ile karşılaşıldı lütfen daha sonra tekrar deneyiniz!",
+    "emailCantFind":"Email adresi bulunamadı",
+    "checkNetwork":"İnternet Bağlantınızı kontrol edip lütfen daha sonra tekrar deneyiniz",
+
+    "likedWords":"Beğenilen Kelimeler",
+    "likedSentences":"Beğenilen Cümleler",
+
+    "chooseNativeLang":"Ana dilinizi seçiniz",
+    "chooseGo":"Seç Ve Devam Et",
+    "whicLanguage":"Hangi Dili Öğrenmek İstiyorsunuz",
+    "beginner":"Başlangıç",
+    "intermediate":"Orta Düzey",
+    "advance":"İleri Düzey",
+
+    "searchWord":"Aranacak Kelimeyi Giriniz",
+    "removedLiked":"Beğenilenlerden Çıkarıldı",
+
+    "chooseRight":"Doğru şıkkı seçin",
+    "correctAnswer":"Doğru Cevap!",
+    "wrongAnswer":"Yanlış Cevap!",
+    "check":"Kontrol Et",
+
+    "bla":"bla"
 }

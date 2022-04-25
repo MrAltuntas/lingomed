@@ -14,6 +14,7 @@ import { Audio } from 'expo-av';
 import useCollection from "../hooks/useCollection";
 import { API_URL } from "../../config";
 import finishedCategory from "../helpers/finishedCategory";
+import { Button, Paragraph, Dialog, Portal, Provider } from 'react-native-paper';
 
 const Question = ({ route }) => {
     const { categoryId } = route.params
@@ -28,12 +29,12 @@ const Question = ({ route }) => {
     const [value, setValue] = React.useState(false);
     const [hiddenCount, setHiddenCount] = useState(0)
 
+    const [visible, setVisible] = useState({ visible: false, message: "" });
+    const hideDialog = () => setVisible(false);
 
     const handleHidden = () => {
         if (datas.length - 1 == hiddenCount) {
             if (value) {
-                alert("bingo")
-
                 finishedCategory(userContext.state.targetLang, categoryId, userContext.state.level, userContext.state.email, userContext)
                 navigation.navigate("Categories")
                 setHiddenCount(0)
@@ -49,7 +50,10 @@ const Question = ({ route }) => {
 
     const handleCheck = () => {
         if (value) {
-            alert("bingo")
+            setVisible({ visible: true, message: contextLang.state.correctAnswer })
+            handleHidden()
+        } else {
+            setVisible({ visible: true, message: contextLang.state.wrongAnswer })
         }
     }
 
@@ -61,64 +65,66 @@ const Question = ({ route }) => {
         await sound.playAsync();
     }
 
-    const datas = questions.filter(question => question.categoryId.includes(categoryId) && question.level.includes(userContext.state.level) && question.symbol == userContext.state.targetLang )
+    const datas = questions.filter(question => question.categoryId.includes(categoryId) && question.level.includes(userContext.state.level) && question.symbol == userContext.state.targetLang)
 
     return (
-        <View style={styles.container}>
-            <LinearGradient startPlace={1} endPlace={0} height={300} />
-            <View style={styles.vtitle}>
-                <Text style={styles.texttitle}>{hiddenCount+1 } / {datas.length}</Text>
-                <Text style={styles.texttitle2}>Doğru şıkkı seçin</Text>
-            </View>
-            <View style={styles.fview}>
-                <FlatList
-                    data={datas}
-                    horizontal={false}
-                    numColumns={1}
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                    keyExtractor={(lang) => lang._id}
-                    ListHeaderComponent={null}
-                    ListFooterComponent={null}
-                    renderItem={({ item, index }) => {
+        <Provider>
 
-                        let selections = []
+            <View style={styles.container}>
+                <LinearGradient startPlace={1} endPlace={0} height={300} />
+                <View style={styles.vtitle}>
+                    <Text style={styles.texttitle}>{hiddenCount + 1} / {datas.length}</Text>
+                    <Text style={styles.texttitle2}>{contextLang.state.chooseRight}</Text>
+                </View>
+                <View style={styles.fview}>
+                    <FlatList
+                        data={datas}
+                        horizontal={false}
+                        numColumns={1}
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                        keyExtractor={(lang) => lang._id}
+                        ListHeaderComponent={null}
+                        ListFooterComponent={null}
+                        renderItem={({ item, index }) => {
 
-                        item.selections.map(selection => {
-                            if (selection.symbol == userContext.state.nativeLang) {
-                                selection.options.map(subSelection => {
-                                    selections.push({ selection: subSelection.option, answer: subSelection.answer })
-                                })
-                            }
-                        })
-                        return (
-                            <>
-                                {index == hiddenCount ?
-                                    <View style={{ marginLeft: 20, marginRight: 20 }}>
-                                        <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 50 }}>
-                                            <TouchableOpacity onPress={() => playSound(API_URL + item.audioPath)} style={styles.soundiconcircle} >
-                                                <View style={styles.mt14}><Image source={require('../../assets/sound.png')} /></View>
-                                            </TouchableOpacity>
-                                            <Text style={{ fontSize: 20, color: "#075CAB", margin: 15 }}>{item.sentence}</Text>
+                            let selections = []
+
+                            item.selections.map(selection => {
+                                if (selection.symbol == userContext.state.nativeLang) {
+                                    selection.options.map(subSelection => {
+                                        selections.push({ selection: subSelection.option, answer: subSelection.answer })
+                                    })
+                                }
+                            })
+                            return (
+                                <>
+                                    {index == hiddenCount ?
+                                        <View style={{ marginLeft: 20, marginRight: 20 }}>
+                                            <View style={{ flex: 1, flexDirection: "row", alignItems: "center", justifyContent: "center", marginBottom: 50 }}>
+                                                <TouchableOpacity onPress={() => playSound(API_URL + item.audioPath)} style={styles.soundiconcircle} >
+                                                    <View style={styles.mt14}><Image source={require('../../assets/sound.png')} /></View>
+                                                </TouchableOpacity>
+                                                <Text style={{ fontSize: 20, color: "#075CAB", margin: 15 }}>{item.sentence}</Text>
+                                            </View>
+                                            <RadioButton.Group >
+                                                <RadioButton.Item onPress={() => { setChecked(selections[0].selection), setValue(selections[0].answer) }} status={checked === selections[0].selection ? 'checked' : 'unchecked'} style={styles.radioinput} color="#FFB400" label={selections[0].selection} value={selections[0]} />
+                                                <RadioButton.Item onPress={() => { setChecked(selections[1].selection), setValue(selections[1].answer) }} status={checked === selections[1].selection ? 'checked' : 'unchecked'} style={styles.radioinput} color="#FFB400" label={selections[1].selection} value={selections[1]} />
+                                                <RadioButton.Item onPress={() => { setChecked(selections[2].selection), setValue(selections[2].answer) }} status={checked === selections[2].selection ? 'checked' : 'unchecked'} style={styles.radioinput} color="#FFB400" label={selections[2].selection} value={selections[2]} />
+                                            </RadioButton.Group>
+                                            <View style={styles.mt20} >
+                                                <FormSubmitButton title={contextLang.state.check} onPress={() => handleCheck()} />
+                                            </View>
                                         </View>
-                                        <RadioButton.Group >
-                                            <RadioButton.Item onPress={() => { setChecked(selections[0].selection), setValue(selections[0].answer) }} status={checked === selections[0].selection ? 'checked' : 'unchecked'} style={styles.radioinput} color="#FFB400" label={selections[0].selection} value={selections[0]} />
-                                            <RadioButton.Item onPress={() => { setChecked(selections[1].selection), setValue(selections[1].answer) }} status={checked === selections[1].selection ? 'checked' : 'unchecked'} style={styles.radioinput} color="#FFB400" label={selections[1].selection} value={selections[1]} />
-                                            <RadioButton.Item onPress={() => { setChecked(selections[2].selection), setValue(selections[2].answer) }} status={checked === selections[2].selection ? 'checked' : 'unchecked'} style={styles.radioinput} color="#FFB400" label={selections[2].selection} value={selections[2]} />
-                                        </RadioButton.Group>
-                                        <View style={styles.mt20} >
-                                            <FormSubmitButton title='Kontrol Et' onPress={() => handleCheck()} />
-                                        </View>
-                                    </View>
-                                    :
-                                    null}
-                            </>
+                                        :
+                                        null}
+                                </>
 
-                        )
-                    }}
-                />
-            </View>
-            <View style={styles.bottomContainer}>
+                            )
+                        }}
+                    />
+                </View>
+                {/* <View style={styles.bottomContainer}>
                 <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
                     <TouchableOpacity style={styles.footerview}>
                         <Image style={styles.footerimage} source={require('../../assets/soundyellow.png')} />
@@ -130,12 +136,40 @@ const Question = ({ route }) => {
                         <Image style={styles.footerimage} source={require('../../assets/begen.png')} />
                     </TouchableOpacity>
                 </ImageBackground>
+            </View> */}
+                <Portal>
+                    <Dialog style={styles.modalView} visible={visible.visible} onDismiss={hideDialog} >
+                        <Dialog.Content >
+                                <Paragraph style={styles.modalText}>{visible.message}</Paragraph>
+                        </Dialog.Content>
+                    </Dialog>
+                </Portal>
             </View>
-        </View>
+        </Provider>
 
     )
 }
 const styles = StyleSheet.create({
+    modalText: {
+        color: "#fff",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalView: {
+        margin: 0,
+        backgroundColor: "#1566B1",
+        borderRadius: 20,
+        padding: 5,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
     container: {
         flex: 1,
         padding: 0,

@@ -6,7 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Context as UserContext } from '../context/UserContext'
 import { Context as LangContext } from '../context/LangContext'
 
-import SetLang from "../helpers/SetLang";
 import SetUserInfo from "../helpers/SetUserInfo";
 import LingomedBottomMenu from "../components/NavigationMenus/BottomMenu/LingomedBottomMenu";
 
@@ -17,29 +16,30 @@ const Home = () => {
     const navigation = useNavigation();
 
     useEffect(async () => {
-        await SetLang(contextLang)
         await SetUserInfo(userContext)
+        console.log(userContext.state.nativeLang);
+        contextLang.changeLang(userContext.state.nativeLang)
     }, [])
 
     return (
             <View style={styles.container}>
                 <View style={{ flex: 1, justifyContent: "center", flexDirection:"column", alignItems: "center" }}>
                     <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate("Categories")}>
-                        <Image style={styles.images} source={require('../../assets/books.jpg')} />
-                        <Text style={styles.text}>Dersler</Text>
+                        <Image style={styles.images} source={require('../../assets/dersler.png')} />
+                        <Text style={styles.text}>{contextLang.state.lessons}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate("Dictionary")}>
-                        <Image style={styles.images} source={require('../../assets/books.jpg')} />
-                        <Text style={styles.text}>Sözlük</Text>
+                        <Image style={styles.images} source={require('../../assets/sozluk.png')} />
+                        <Text style={styles.text}>{contextLang.state.dictionary}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate("Exams")}>
                         <Image style={styles.images} source={require('../../assets/books.jpg')} />
-                        <Text style={styles.text}>Sınavlar</Text>
+                        <Text style={styles.text}>{contextLang.state.exams}</Text>
                     </TouchableOpacity>
                 </View>
-                <LingomedBottomMenu contextLang={contextLang} navigation={navigation} />
+                {/* <LingomedBottomMenu contextLang={contextLang} navigation={navigation} /> */}
             </View>
     )
 

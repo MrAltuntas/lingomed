@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 
 import { Context as LangContext } from '../context/LangContext'
+import { Context as UserContext } from '../context/UserContext'
 
 import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
 import LinearGradient from '../components/LinearGradient';
@@ -14,9 +15,10 @@ import useCollection from "../hooks/useCollection";
 
 const Welcome = () => {
     const contextLang = useContext(LangContext)
+    const userContext = useContext(UserContext)
 
     const navigation = useNavigation();
-    const [nativeLang, setNativeLang] = useState(contextLang.state.lang);
+    const [nativeLang, setNativeLang] = useState(userContext.state.nativeLang);
 
     const [collectionApi, langs, errorMessage] = useCollection("lang")
 
@@ -29,7 +31,7 @@ const Welcome = () => {
     return (
         <View style={styles.container}>
             <View style={{ flex: 1 }}>
-                <Text style={styles.texttitle}>Ana dilinizi seçiniz</Text>
+                <Text style={styles.texttitle}>{contextLang.state.chooseNativeLang}</Text>
             </View>
             <View style={{ flex: langs.length-1 }}>
                 <FlatList
@@ -54,7 +56,7 @@ const Welcome = () => {
                 />
             </View>
             <View style={{ flex: 1 }}>
-                <FormSubmitButton title='Seç ve Devam Et' onPress={() => navigation.navigate('Welcome2', { nativeLang: nativeLang })} />
+                <FormSubmitButton title={contextLang.state.chooseGo} onPress={() => navigation.navigate('Welcome2', { nativeLang: nativeLang })} />
             </View>
         </View>
     )

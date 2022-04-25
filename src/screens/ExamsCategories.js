@@ -67,7 +67,7 @@ const ExamsCategories = ({ route }) => {
                 />
             </View>
 
-            <LingomedBottomMenu contextLang={contextLang} navigation={navigation}/>
+            {/* <LingomedBottomMenu contextLang={contextLang} navigation={navigation}/> */}
 
         </View>
     )

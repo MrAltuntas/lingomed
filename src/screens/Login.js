@@ -17,10 +17,7 @@ import GlobalStyles from '../style/Global';
 
 import SetLang from '../helpers/SetLang';
 
-let validationSchema = yup.object().shape({
-    email: yup.string().email('Mail adresi yanlış!').required('Mail adresi giriniz!'),
-    password: yup.string().trim().min(6, 'Şifre çok kısa!').required('Şifre giriniz!'),
-});
+
 
 const Login = (props) => {
 
@@ -30,10 +27,10 @@ const Login = (props) => {
     const userInfo = { email: "", password: "" }
     const navigation = useNavigation();
 
-
-    useEffect(async () => {
-        await SetLang(contextLang)
-    }, [])
+    let validationSchema = yup.object().shape({
+        email: yup.string().email(contextLang.state.unCorrectEmail).required(contextLang.state.enterEmail),
+        password: yup.string().trim().min(6, contextLang.state.unCorrectPassword).required(contextLang.state.enterPassword),
+    });
 
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">
@@ -49,7 +46,7 @@ const Login = (props) => {
 
                                 <FormInput value={email}
                                     style={GlobalStyles.input}
-                                    placeholder="E-posta Adresiniz"
+                                    placeholder="E-mail"
                                     keyboardType={"email-address"}
                                     autoCapitalize={"none"}
                                     placeholderTextColor="#9D9FA0"
@@ -58,7 +55,7 @@ const Login = (props) => {
 
                                 <FormInput value={password}
                                     style={GlobalStyles.input}
-                                    placeholder="Şifreniz"
+                                    placeholder={contextLang.state.password}
                                     placeholderTextColor="#9D9FA0"
                                     error={errors.password}
                                     autoCapitalize={"none"}
@@ -67,7 +64,7 @@ const Login = (props) => {
 
                                 <FormSubmitButton
                                     onPress={handleSubmit}
-                                    title='GİRİŞ YAP' />
+                                    title={contextLang.state.login} />
 
 
                                 {/* {state.errorMessage ? <Text>{state.errorMessage}</Text> : null} */}
@@ -76,13 +73,13 @@ const Login = (props) => {
                     }}
                 </Formik>
                 <Text onPress={() => navigation.navigate("ForgetPassword")} style={styles.title}>
-                    Şifremi unuttum
+                    {contextLang.state.forgetPassword}
                 </Text>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
                     <View style={{ flex: 1, height: 1, backgroundColor: '#61A0D2' }} />
                     <View>
-                        <Text style={{ width: 50, textAlign: 'center', color: '#61A0D2' }}>veya</Text>
+                        <Text style={{ width: 50, textAlign: 'center', color: '#61A0D2' }}>{contextLang.state.or}</Text>
                     </View>
                     <View style={{ flex: 1, height: 1, backgroundColor: '#61A0D2' }} />
                 </View>
@@ -113,7 +110,7 @@ const Login = (props) => {
                 <View style={[styles.yho, { flexDirection: "row" }]}>
                     <Image style={styles.createlogo} source={require('../../assets/yenihesapolustur.png')} />
                     <Text onPress={() => navigation.navigate("Register")} style={GlobalStyles.titlewhite}>
-                        Yeni Hesap Oluştur
+                    {contextLang.state.createNewAccount}
                     </Text>
                 </View>
 

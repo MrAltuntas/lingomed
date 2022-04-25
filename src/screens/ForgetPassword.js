@@ -30,24 +30,24 @@ const ForgetPassword = (props) => {
             const response = await mainApi.post('/data/forgotpassword', { email })
 
             if (response.data.success) {
-                alert("Şifre sıfırlama linki mail adresinize gönderildi")
+                alert(contextLang.state.resetPasswordLink)
                 navigation.navigate("Login")
             } else {
-                alert("Bir hata oluştu daha sonra tekrar deneyiniz")
+                alert(contextLang.state.anError)
                 navigation.navigate("Login")
             }
         } catch (error) {
             if (error.response) {
                 console.log(error.response);
                 if (error.response.status == 400) {
-                    alert("Email adresi bulunamadı")
+                    alert(contextLang.state.emailCantFind)
                 } else {
-                    alert("İnternet Bağlantınızı kontrol edip lütfen daha sonra tekrar deneyiniz")
+                    alert(contextLang.state.checkNetwork)
                     navigation.navigate("Login")
 
                 }
             } else {
-                alert("Bir hata ile karşılaşıldı lütfen daha sonra tekrar deneyiniz!")
+                alert(contextLang.state.anError)
                 navigation.navigate("Login")
             }
         }
@@ -57,7 +57,7 @@ const ForgetPassword = (props) => {
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">
             <View style={GlobalStyles.container}>
-                <LinearGradient startPlace={1} endPlace={0} height={300}/>
+                <LinearGradient startPlace={1} endPlace={0} height={300} />
                 <Logo />
                 <Formik validationSchema={validationSchema} initialValues={userInfo} onSubmit={(values) => handleForgotPassword(values)}>
 
@@ -76,14 +76,14 @@ const ForgetPassword = (props) => {
 
                                 <FormSubmitButton
                                     onPress={handleSubmit}
-                                    title='ŞİFREMİ UNUTTUM' />
+                                    title={contextLang.state.forgetPassword} />
                             </>
                         )
                     }}
                 </Formik>
 
                 <Text onPress={() => navigation.navigate("Login")} style={styles.title}>
-                    Giriş Yap
+                    {contextLang.state.login}
                 </Text>
             </View>
         </ScrollView>

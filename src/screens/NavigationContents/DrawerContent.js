@@ -102,7 +102,7 @@ export function DrawerContent(props) {
                                     size={size}
                                 />
                             )}
-                            label="Beğenilen Kelimeler"
+                            label={contextLang.state.likedWords}
                             onPress={() => { props.navigation.navigate('LikedWords') }}
                         />
                         <DrawerItem 
@@ -113,7 +113,7 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Liked Sentence"
+                            label={contextLang.state.likedSentences}
                             onPress={() => {props.navigation.navigate('LikedSentence')}}
                         />
                         <DrawerItem 
@@ -124,7 +124,7 @@ export function DrawerContent(props) {
                                 size={size}
                                 />
                             )}
-                            label="Exams"
+                            label={contextLang.state.exams}
                             onPress={() => {props.navigation.navigate('Exams')}}
                         />
                     </Drawer.Section>

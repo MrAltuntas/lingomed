@@ -90,7 +90,7 @@ const Categories = () => {
                 />
             </View>
 
-            <LingomedBottomMenu contextLang={contextLang} navigation={navigation} /> 
+            {/* <LingomedBottomMenu contextLang={contextLang} navigation={navigation} />  */}
 
         </View>
     )
