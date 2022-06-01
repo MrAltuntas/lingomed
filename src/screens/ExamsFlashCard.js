@@ -20,6 +20,7 @@ const Sentence = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(-1);
     const [visible, setVisible] = useState(false);
+    const [visibleTranslation, setVisibleTranslation] = useState({ visible: false, translation: "" });
 
     const [hiddenCount, setHiddenCount] = useState(0)
 
@@ -67,7 +68,14 @@ const Sentence = ({ route }) => {
     }
     const hideDialog = () => setVisible(false);
 
+
+    const hideDialogTranslation = () => setVisibleTranslation({ visible: false, translation: "" })
+    const handleTranslationDaily = () => {
+        //console.log(selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0].sentence);
+        setVisibleTranslation({ visible: true, translation: selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0].sentence })
+    }
     return (
+
         <Provider>
             <View style={styles.container}>
                 <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30, }}>
@@ -85,16 +93,16 @@ const Sentence = ({ route }) => {
                             return (
                                 <>
                                     {index == hiddenCount ?
-                                        <View hidden={true} style={{ paddingTop: 50, flexDirection: "column", justifyContent: "center" }}>
-                                            <View style={{ flexDirection: "row", justifyContent: "center"}}>
+                                        <View hidden={true} style={{ paddingTop: 0, flexDirection: "column", justifyContent: "center" }}>
+                                            <View style={{ flexDirection: "row", justifyContent: "center" }}>
                                                 <View style={styles.soundiconcircle} >
                                                     <TouchableOpacity onPress={() => playSound(API_URL + flashCardTarget.audioPath)} style={styles.mt14}><Image source={require('../../assets/sound.png')} /></TouchableOpacity>
                                                 </View>
                                             </View>
 
-                                            <View style={[styles.textview, {marginTop: 50}]}>
+                                            <View style={[styles.textview, { marginTop: 50 }]}>
                                                 <Text style={styles.text1}>{flashCardTarget.sentence}</Text>
-                                                <Text style={styles.text2}>{flashCardNative.sentence}</Text>
+                                                {/* <Text style={styles.text2}>{flashCardNative.sentence}</Text> */}
                                             </View>
 
                                             {/* <TouchableOpacity onPress={() => navigation.navigate("Question")} >
@@ -109,20 +117,64 @@ const Sentence = ({ route }) => {
                     />
                 </View>
 
+                {/* <View style={styles.bottomContainer}>
+                    <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
+                        <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
+                            <Image style={styles.footerimage} source={require('../../assets/next.png')} />
+                        </TouchableOpacity>
+                    </ImageBackground>
+                </View> */}
+
                 <View style={styles.bottomContainer}>
                     <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
+
+                        <TouchableOpacity style={styles.footerview} onPress={() => handleTranslationDaily()} >
+                            <Image style={styles.footerimage} source={require('../../assets/change.png')} />
+                        </TouchableOpacity>
+
                         <TouchableOpacity style={styles.footerview} onPress={() => handleHidden()}>
                             <Image style={styles.footerimage} source={require('../../assets/next.png')} />
                         </TouchableOpacity>
                     </ImageBackground>
                 </View>
 
+
+                <Portal>
+                    <Dialog style={styles.modalView} visible={visibleTranslation.visible} onDismiss={hideDialogTranslation}>
+                        <Dialog.Content>
+                            <Paragraph style={styles.modalText}>{visibleTranslation.translation}</Paragraph>
+                        </Dialog.Content>
+                    </Dialog>
+                </Portal>
+
             </View>
         </Provider>
+
     )
 }
 
 const styles = StyleSheet.create({
+    modalText: {
+        color: "#FFB400",
+        fontWeight: "400",
+        textAlign: "center",
+        fontSize: 18
+    },
+    modalView: {
+        margin: 0,
+        backgroundColor: "#1566B1",
+        borderRadius: 20,
+        padding: 5,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
     textview: {
         alignItems: "center"
     },
@@ -140,7 +192,7 @@ const styles = StyleSheet.create({
     br10: { borderRadius: 10 },
     fview: { flex: 4, paddingLeft: 20, paddingRight: 20 },
     text1: {
-        color: "#F6AE00",
+        color: "#075CAB",
         fontWeight: "bold",
         fontSize: 22
     },
@@ -187,8 +239,8 @@ const styles = StyleSheet.create({
     },
     texttitle: {
         color: '#075CAB',
-        fontWeight: '500',
-        fontSize: 17,
+        fontWeight: 'bold',
+        fontSize: 20,
         marginTop: 40,
         marginBottom: 10,
         textAlign: 'left',

@@ -12,13 +12,21 @@ const ModalDictionary = ({coloredObj={},colored=false,userContext, index, modalV
             const config = {
                 headers: { Authorization: `Arflok: ${token}` }
             };
-            const response = await mainApi.post(`/data/pushData/users/${email}/likedWords`, { id: id, symbol:targetLang }, config)
-
-            if (response.data.success && response.data.data.likedWords.length > 0) {
-                userContext.updateUser("pushLikedWord", { id: id, symbol: targetLang, _id: response.data.data.likedWords.slice(-1)[0]._id })
+            console.log(userContext.state.likedWords.filter(likedWord => likedWord.id == id && likedWord.symbol == targetLang));
+            if(userContext.state.likedWords.filter(likedWord => likedWord.id == id && likedWord.symbol == targetLang).length > 0){
+                //alert("already addded")
                 setModalVisible(-1);
                 showDialog()
-                console.log("eklendi");
+
+            }else{
+                const response = await mainApi.post(`/data/pushData/users/${email}/likedWords`, { id: id, symbol:targetLang }, config)
+
+                if (response.data.success && response.data.data.likedWords.length > 0) {
+                    userContext.updateUser("pushLikedWord", { id: id, symbol: targetLang, _id: response.data.data.likedWords.slice(-1)[0]._id })
+                    setModalVisible(-1);
+                    showDialog()
+                    //console.log("eklendi");
+                }
             }
 
         } catch (error) {
@@ -103,16 +111,16 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     modalText: {
-        color: "#fff",
+        color: "#FFB400",
         fontWeight: "bold",
         fontSize: 25,
         marginBottom: 20,
         textAlign: "center"
     },
     modalText2: {
-        color: "#fff",
+        color: "#FFB400",
         fontWeight: "400",
-        fontSize: 14,
+        fontSize: 16,
         marginBottom: 5,
         textAlign: "center",
         borderBottomColor: "#ffffff90",

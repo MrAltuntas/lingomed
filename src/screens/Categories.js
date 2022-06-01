@@ -10,6 +10,23 @@ import { Badge } from 'react-native-paper';
 
 import useCollection from "../hooks/useCollection";
 import LingomedBottomMenu from "../components/NavigationMenus/BottomMenu/LingomedBottomMenu";
+import AppLoading from 'expo-app-loading';
+import { useFonts, ArchivoBlack_400Regular } from '@expo-google-fonts/archivo-black'
+
+import {
+    Roboto_100Thin,
+    Roboto_100Thin_Italic,
+    Roboto_300Light,
+    Roboto_300Light_Italic,
+    Roboto_400Regular,
+    Roboto_400Regular_Italic,
+    Roboto_500Medium,
+    Roboto_500Medium_Italic,
+    Roboto_700Bold,
+    Roboto_700Bold_Italic,
+    Roboto_900Black,
+    Roboto_900Black_Italic
+} from '@expo-google-fonts/roboto'
 
 const Categories = () => {
     const contextLang = useContext(LangContext)
@@ -32,6 +49,15 @@ const Categories = () => {
         })
     })
 
+    let [fontsLoaded] = useFonts({
+        ArchivoBlack_400Regular,
+        Roboto_700Bold,
+    });
+
+    if (!fontsLoaded) {
+        return <AppLoading />; 
+    }
+
     return (
         <View style={styles.container}>
 
@@ -47,7 +73,7 @@ const Categories = () => {
                     renderItem={({ item, index }) => {
 
                         const finishedCategories = userContext.state.finishedCategories.filter(finishedCategories => finishedCategories.categoryId == item.categoryId && finishedCategories.symbol == userContext.state.targetLang)
-                        
+
                         const innerStylies = {
                             beginner: false,
                             intermediate: false,
@@ -76,11 +102,11 @@ const Categories = () => {
                             <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate('Sentence', { categoryId: item.categoryId, categoryName: item.name })}>
                                 <View style={styles.textCover}>
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                                        {innerStylies.beginner ? <Icon name="check" style={{ position: "absolute", top: -15, right: 30, opacity: 1, color: "green"}} size={26} />:null}
-                                        {innerStylies.intermediate ? <Icon name="check" style={{ position: "absolute", top: -15, right: 15, opacity: 1, color:"orange"}} size={26} />:null}
-                                        {innerStylies.advance ? <Icon name="check" style={{ position: "absolute", top: -15, right: 0, opacity: 1, color:"red"}} size={26} />:null}
+                                        {innerStylies.beginner ? <Icon name="check" style={{ position: "absolute", top: 5, right: 30, opacity: 1, color: "green" }} size={26} /> : null}
+                                        {innerStylies.intermediate ? <Icon name="check" style={{ position: "absolute", top: 5, right: 15, opacity: 1, color: "#075CAB" }} size={26} /> : null}
+                                        {innerStylies.advance ? <Icon name="check" style={{ position: "absolute", top: 5, right: 0, opacity: 1, color: "red" }} size={26} /> : null}
 
-                                        <Badge style={{ margin: 10, marginRight: 0, backgroundColor: "#ffff", borderColor: "#075CAB", borderWidth: 1, color: "#075CAB" }}>{index + 1}</Badge>
+                                        <Badge style={{ margin: 10, marginRight: 0, fontWeight: "bold", backgroundColor: "#FFB400", borderColor: "#fff", borderWidth: 1, color: "#fff" }}>{index + 1}</Badge>
                                         <Text style={styles.text}>{item.name}</Text>
                                     </View>
                                 </View>
@@ -98,13 +124,12 @@ const Categories = () => {
 const styles = StyleSheet.create({
     texttitle: {
         color: '#075CAB',
-        fontWeight: '500',
-        fontSize: 20,
+        fontSize: 24,
         marginTop: 50,
         marginBottom: 10,
         textAlign: 'left',
         width: '100%',
-
+        fontFamily: "Roboto_700Bold"
     },
     container: {
         flex: 1,
@@ -127,14 +152,15 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'left',
-        color: '#075CAB',
+        color: '#fff',
         fontSize: 15,
         margin: 10,
+        fontFamily: "Roboto_700Bold"
     },
     textCover: {
         width: "100%",
         height: 50,
-        backgroundColor: "#ffff",
+        backgroundColor: "#ffb400",
         borderRadius: 10,
         marginTop: 10,
         justifyContent: "center"

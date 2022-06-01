@@ -82,16 +82,16 @@ const styles = StyleSheet.create({
         flexDirection: "row"
     },
     modalText: {
-        color: "#fff",
+        color: "#FFB400",
         fontWeight: "bold",
-        fontSize: 25,
+        fontSize: 27,
         marginBottom: 20,
         textAlign: "center"
     },
     modalText2: {
-        color: "#fff",
+        color: "#FFB400",
         fontWeight: "400",
-        fontSize: 14,
+        fontSize: 16,
         marginBottom: 5,
         textAlign: "center",
         borderBottomColor: "#ffffff90",

@@ -11,6 +11,11 @@ import LingomedBottomMenu from "../components/NavigationMenus/BottomMenu/Lingome
 
 import useCollection from "../hooks/useCollection";
 
+import AppLoading from 'expo-app-loading';
+import { useFonts,
+    ArchivoBlack_400Regular 
+  } from '@expo-google-fonts/archivo-black'
+
 const Exams = () => {
     const contextLang = useContext(LangContext)
     const userContext = useContext(UserContext)
@@ -33,6 +38,14 @@ const Exams = () => {
         })
     })
 
+    let [fontsLoaded] = useFonts({
+        ArchivoBlack_400Regular
+    });
+
+    if (!fontsLoaded) {
+        return <AppLoading />;
+    }
+
     return (
         <View style={styles.container}>
 
@@ -50,7 +63,7 @@ const Exams = () => {
                             <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate('ExamsCategories', { examId: item.examId, examName: item.name})}>
                                 <View style={styles.textCover}>
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                                        <Badge style={{ margin: 10, marginRight: 0, backgroundColor: "#ffff", borderColor: "#075CAB", borderWidth: 1, color: "#075CAB" }}>{index + 1}</Badge>
+                                        <Badge style={{ margin: 10, marginRight: 0, backgroundColor: "#FFB400", borderColor: "#fff", borderWidth: 1, color: "#fff" }}>{index + 1}</Badge>
                                         <Text style={styles.text}>{item.name}</Text>
                                     </View>
                                 </View>
@@ -68,13 +81,12 @@ const Exams = () => {
 const styles = StyleSheet.create({
     texttitle: {
         color: '#075CAB',
-        fontWeight: '500',
-        fontSize: 20,
+        fontSize: 24,
         marginTop: 50,
         marginBottom: 10,
         textAlign: 'left',
         width: '100%',
-
+        fontFamily: "Roboto_700Bold"
     },
     container: {
         flex: 1,
@@ -97,18 +109,20 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'left',
-        color: '#075CAB',
+        color: '#fff',
         fontSize: 15,
         margin: 10,
+        fontFamily: "Roboto_700Bold"
     },
     textCover: {
         width: "100%",
         height: 50,
-        backgroundColor: "#ffff",
+        backgroundColor: "#ffb400",
         borderRadius: 10,
         marginTop: 10,
         justifyContent: "center"
     }
 });
+
 
 export default Exams

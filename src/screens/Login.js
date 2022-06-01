@@ -35,7 +35,7 @@ const Login = (props) => {
     return (
         <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">
             <View style={GlobalStyles.container}>
-                <LinearGradient startPlace={1} endPlace={0} height={200}/>
+                <LinearGradient startPlace={1} endPlace={0} height={200} />
                 <Logo />
                 <Formik validationSchema={validationSchema} initialValues={userInfo} onSubmit={(values) => signIn(values)}>
 
@@ -107,11 +107,13 @@ const Login = (props) => {
                     </View>
                 </View>
 
-                <View style={[styles.yho, { flexDirection: "row" }]}>
-                    <Image style={styles.createlogo} source={require('../../assets/yenihesapolustur.png')} />
-                    <Text onPress={() => navigation.navigate("Register")} style={GlobalStyles.titlewhite}>
-                    {contextLang.state.createNewAccount}
-                    </Text>
+                <View style={styles.yho}>
+                    <View style={{flexDirection: "row"}}>
+                        <Image style={styles.createlogo} source={require('../../assets/yenihesapolustur.png')} />
+                        <Text onPress={() => navigation.navigate("Register")} style={GlobalStyles.titlewhite}>
+                            {contextLang.state.createNewAccount}
+                        </Text>
+                    </View>
                 </View>
 
                 {/* <Button title="register" onPress={() => navigation.navigate("Register")} />
@@ -122,16 +124,16 @@ const Login = (props) => {
 }
 
 const styles = StyleSheet.create({
-
     collar: {
         padding: 10,
         margin: 5
     },
     yho: {
-        position: 'absolute',
         padding: 10,
-        margin: 5,
-        bottom: 40
+        marginBottom: 40,
+        flex: 1,
+        justifyContent: "flex-end",
+        flexDirection: "column"
     },
     createlogo: {
         width: 24,

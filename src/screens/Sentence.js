@@ -11,7 +11,7 @@ import mainApi from "../api/mainApi";
 
 import { Button, Paragraph, Dialog, Portal, Provider } from 'react-native-paper';
 import ColoredModal from "../components/ColoredModal";
-
+import { Dimensions } from 'react-native';
 const Sentence = ({ route }) => {
     const [collectionApi, sentences, errorMessage] = useCollection("sentences")
     const [wordsApi, coloredWords, wordsErrorMessage] = useCollection("coloredWords")
@@ -21,7 +21,7 @@ const Sentence = ({ route }) => {
 
     const [modalVisible, setModalVisible] = useState(-1);
     const [visible, setVisible] = useState(false);
-    const [visibleTranslation, setVisibleTranslation] = useState({visible: false, translation:""});
+    const [visibleTranslation, setVisibleTranslation] = useState({ visible: false, translation: "" });
 
     const [hiddenCount, setHiddenCount] = useState(0)
 
@@ -32,7 +32,7 @@ const Sentence = ({ route }) => {
 
     const handleHidden = () => {
         if (selection.length - 1 == hiddenCount) {
-            navigation.navigate("Question", {categoryId})
+            navigation.navigate("Question", { categoryId })
             setHiddenCount(0)
         }
         else if (selection.length > hiddenCount) {
@@ -54,13 +54,19 @@ const Sentence = ({ route }) => {
             const config = {
                 headers: { Authorization: `Arflok: ${token}` }
             };
-            const response = await mainApi.post(`/data/pushData/users/${userContext.state.email}/likedSentences`, { id: selection[hiddenCount]._id, symbol: userContext.state.targetLang }, config)
-            if (response.data.success && response.data.data.likedSentences.length > 0) {
-                userContext.updateUser("pushLikedSentence", { id: selection[hiddenCount]._id, symbol: userContext.state.targetLang, _id: response.data.data.likedSentences.slice(-1)[0]._id })
-
+            //console.log(userContext.state.likedSentences.filter(likedSentence => likedSentence.id == selection[hiddenCount]._id && likedSentence.symbol == userContext.state.targetLang).length);
+            if(userContext.state.likedSentences.filter(likedSentence => likedSentence.id == selection[hiddenCount]._id && likedSentence.symbol == userContext.state.targetLang).length > 0){
+                //alert("already addded")
                 setVisible(true)
-            }
 
+            }else{
+                const response = await mainApi.post(`/data/pushData/users/${userContext.state.email}/likedSentences`, { id: selection[hiddenCount]._id, symbol: userContext.state.targetLang }, config)
+                if (response.data.success && response.data.data.likedSentences.length > 0) {
+                    userContext.updateUser("pushLikedSentence", { id: selection[hiddenCount]._id, symbol: userContext.state.targetLang, _id: response.data.data.likedSentences.slice(-1)[0]._id })
+    
+                    setVisible(true)
+                }
+            }
         } catch (error) {
             alert("Favori Cümlelere Eklenemedi!!!")
             console.log(error);
@@ -68,15 +74,17 @@ const Sentence = ({ route }) => {
     }
     const hideDialog = () => setVisible(false);
 
-    const hideDialogTranslation = () => setVisibleTranslation({visible: false, translation:""})
+    const hideDialogTranslation = () => setVisibleTranslation({ visible: false, translation: "" })
     const handleTranslationDaily = () => {
         //console.log(selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0].dailySentence);
-        setVisibleTranslation({visible: true, translation: selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0].dailySentence})
+        setVisibleTranslation({ visible: true, translation: selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.nativeLang)[0].dailySentence })
     }
+
+    const windowHeight = Dimensions.get('window').height;
     return (
         <Provider>
             <View style={styles.container}>
-                <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30, }}>
+                <View style={{ marginLeft: 20, marginRight: 20, borderBottomColor: '#075CAB', borderBottomWidth: 1, marginBottom: 30 }}>
                     <Text style={styles.texttitle}>{contextLang.state.lessons} / {categoryName}</Text>
                 </View>
                 <View style={styles.fview}>
@@ -92,18 +100,20 @@ const Sentence = ({ route }) => {
                             return (
                                 <>
                                     {index == hiddenCount ?
-                                        <View hidden={true} style={{ paddingTop: 20 }}>
-                                            <ImageBackground source={{ uri: API_URL + item.img }} imageStyle={styles.br10} resizeMode="stretch" style={styles.bosimage}>
-                                                <View style={styles.soundicon1}>
-                                                    <View style={styles.soundiconcircle} >
-                                                        <TouchableOpacity onPress={() => playSound(API_URL + flashCardTarget.audioPath)} style={styles.mt14}><Image source={require('../../assets/sound.png')} /></TouchableOpacity>
+                                        <View hidden={true} style={{ paddingTop: 0, height: windowHeight / 1.5}}>
+                                            <View style={{height: "50%"}}>
+                                                <ImageBackground source={{ uri: API_URL + item.img }} imageStyle={styles.br10} resizeMode="contain" style={styles.bosimage}>
+                                                    <View style={styles.soundicon1}>
+                                                        <View style={styles.soundiconcircle} >
+                                                            <TouchableOpacity onPress={() => playSound(API_URL + flashCardTarget.audioPath)} style={styles.mt14}><Image style={{ resizeMode: 'stretch' }} source={require('../../assets/sound.png')} /></TouchableOpacity>
+                                                        </View>
                                                     </View>
-                                                </View>
-                                            </ImageBackground>
+                                                </ImageBackground>
+                                            </View>
                                             <View style={styles.textview}>
                                                 <Text style={styles.text1}>{flashCardTarget.sentence}</Text>
                                                 <Text style={styles.text2}>{flashCardNative.sentence}</Text>
-                                                <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                                                <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: 50 }}>
 
                                                     {flashCardTarget.dailySentence.split(" ").map((sentence, index) => {
                                                         let word = flashCardColoredWords.filter(word => word.word == sentence)
@@ -115,7 +125,7 @@ const Sentence = ({ route }) => {
                                                                 </View>
                                                             )
                                                         } else {
-                                                            return (<Text key={index} style={styles.text4}>{sentence} </Text>)
+                                                            return (<View key={index}><Text style={styles.text4}>{sentence} </Text></View>)
 
                                                         }
                                                     })}
@@ -134,13 +144,13 @@ const Sentence = ({ route }) => {
                         }}
                     />
                 </View>
-                
+
                 <View style={styles.bottomContainer}>
                     <ImageBackground source={require('../../assets/footer_bg.png')} resizeMode="stretch" style={styles.image}>
                         <TouchableOpacity onPress={() => playSound(API_URL + selection[hiddenCount].flashCards.filter(flashCard => flashCard.symbol == userContext.state.targetLang)[0].dailyAudioPath)} style={styles.footerview}>
                             <Image style={styles.footerimage} source={require('../../assets/soundyellow.png')} />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.footerview}  onPress={() => handleTranslationDaily()} >
+                        <TouchableOpacity style={styles.footerview} onPress={() => handleTranslationDaily()} >
                             <Image style={styles.footerimage} source={require('../../assets/change.png')} />
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.footerview} onPress={() => like()}>
@@ -176,9 +186,10 @@ const Sentence = ({ route }) => {
 
 const styles = StyleSheet.create({
     modalText: {
-        color: "#fff",
-        fontWeight: "bold",
-        textAlign: "center"
+        color: "#FFB400",
+        fontWeight: "400",
+        textAlign: "center",
+        fontSize: 18
     },
     modalView: {
         margin: 0,
@@ -214,7 +225,7 @@ const styles = StyleSheet.create({
     br10: { borderRadius: 10 },
     fview: { flex: 4, paddingLeft: 20, paddingRight: 20 },
     text1: {
-        color: "#F6AE00",
+        color: "#075CAB",
         fontWeight: "bold",
         fontSize: 22
     },
@@ -222,10 +233,10 @@ const styles = StyleSheet.create({
         color: "#7DA0B9", fontSize: 18
     },
     text3: {
-        color: "#F6AE00", fontWeight: "500", fontSize: 14, marginTop: 50, textAlign: "center"
+        color: "#F6AE00", fontWeight: "bold", fontSize: 15, textAlign: "center",
     },
     text4: {
-        color: "#7DA0B9", fontWeight: "500", fontSize: 14, marginTop: 50, textAlign: "center"
+        color: "#7DA0B9", fontWeight: "500", fontSize: 15, textAlign: "center",
     },
     footerview: {
         flex: 1, alignItems: "center"
@@ -241,7 +252,7 @@ const styles = StyleSheet.create({
     bosimage: {
         justifyContent: "center",
         width: "100%",
-        height: 200,
+        height: "100%",
         alignContent: "center",
         alignItems: "center",
         flexDirection: "row",
@@ -261,9 +272,9 @@ const styles = StyleSheet.create({
     },
     texttitle: {
         color: '#075CAB',
-        fontWeight: '500',
-        fontSize: 17,
-        marginTop: 40,
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginTop: 20,
         marginBottom: 10,
         textAlign: 'left',
         width: '100%',

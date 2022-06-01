@@ -111,27 +111,27 @@ const LikedWords = () => {
                                     <>
                                         {item.flashCardId ? item.symbol == targetLang.symbol ?
                                         
-                                            <View style={{ flexDirection: "row", borderColor: "#ECECEC", borderRadius: 5, borderWidth: 1, marginTop: 15 }}>
+                                            <View style={{ flexDirection: "row", borderColor: "#ffb400", borderRadius: 5, borderWidth: 1, marginTop: 15, backgroundColor: "#ffb400" }}>
                                                 <TouchableOpacity onPress={() => setModalVisible(index)} style={[styles.wordsInnerCover, { flex: 8 }]} >
                                                     <Text style={styles.wordText}>{item.word}</Text>
                                                     <ModalDictionary coloredObj={item} colored={true} index={index} showDialog={showDialog} modalVisible={modalVisible} setModalVisible={setModalVisible} likedWordId={targetLang.likedWordIds[index]} id={item._id} word={item.translations}
                                                         playSound={playSound} nativeLang={userContext.state.nativeLang} targetLang={targetLang.symbol} deleteData={true} />
                                                 </TouchableOpacity>
                                                 <TouchableOpacity onPress={() => deleteWord(targetLang.likedWordIds[index])} style={[styles.wordsInnerCover, { flex: 1 }]}>
-                                                    <Icon name="text-box-remove" size={26} />
+                                                    <Icon name="text-box-remove" size={26} color="#fff"/>
                                                 </TouchableOpacity>
                                             </View>
                                             :
                                             null
                                             :
-                                            <View style={{ flexDirection: "row", borderColor: "#ECECEC", borderRadius: 5, borderWidth: 1, marginTop: 15 }}>
+                                            <View style={{ flexDirection: "row", borderColor: "#FFB400", borderRadius: 5, borderWidth: 1, marginTop: 15, backgroundColor: "#ffb400" }}>
                                                 <TouchableOpacity onPress={() => setModalVisible(index)} style={[styles.wordsInnerCover, { flex: 8 }]} >
                                                     <Text style={styles.wordText}>{item.words.filter(word => word.symbol == targetLang.symbol)[0].word}</Text>
                                                     <ModalDictionary index={index} showDialog={showDialog} modalVisible={modalVisible} setModalVisible={setModalVisible} likedWordId={targetLang.likedWordIds[index]} id={item._id} word={item.words}
                                                         playSound={playSound} nativeLang={userContext.state.nativeLang} targetLang={targetLang.symbol} deleteData={true} />
                                                 </TouchableOpacity>
                                                 <TouchableOpacity onPress={() => deleteWord(targetLang.likedWordIds[index])} style={[styles.wordsInnerCover, { flex: 1 }]}>
-                                                    <Icon name="text-box-remove" size={26} />
+                                                    <Icon name="text-box-remove" size={26} color="#fff"/>
                                                 </TouchableOpacity>
                                             </View>
                                         }
@@ -184,11 +184,12 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#C5EBFE',
         borderColor: "#E1E1E1",
-        borderWidth: 1
+        borderWidth: 1,
+        paddingTop: 0
     },
     innerContainer: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#075CAB",
         borderRadius: 20,
         padding: 20
     },
@@ -240,14 +241,15 @@ const styles = StyleSheet.create({
         marginTop: 0,
     },
     wordText: {
-        fontSize: 16,
-        color: "#505050",
-        marginLeft: 10
+        fontSize: 18,
+        color: "#fff",
+        marginLeft: 10,
+        fontWeight: "bold"
     },
     texttitle: {
         color: '#075CAB',
-        fontWeight: '500',
-        fontSize: 17,
+        fontWeight: 'bold',
+        fontSize: 20,
         marginTop: 40,
         marginBottom: 10,
         textAlign: 'left',

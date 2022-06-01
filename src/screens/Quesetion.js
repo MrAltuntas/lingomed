@@ -50,9 +50,11 @@ const Question = ({ route }) => {
 
     const handleCheck = () => {
         if (value) {
+            playSound("https://app.lingomed.net/assets/true.mp3")
             setVisible({ visible: true, message: contextLang.state.correctAnswer })
             handleHidden()
         } else {
+            playSound("https://app.lingomed.net/assets/false.mp3")
             setVisible({ visible: true, message: contextLang.state.wrongAnswer })
         }
     }
@@ -151,9 +153,10 @@ const Question = ({ route }) => {
 }
 const styles = StyleSheet.create({
     modalText: {
-        color: "#fff",
+        color: "#FFB400",
         fontWeight: "bold",
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: 18
     },
     modalView: {
         margin: 0,

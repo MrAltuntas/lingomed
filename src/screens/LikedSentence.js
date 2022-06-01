@@ -84,12 +84,12 @@ const LikedSentence = () => {
                             keyExtractor={(selectedWords,index) => index}
                             renderItem={({ item, index }) => {
                                 return (
-                                    <View style={{ flexDirection: "row", borderColor: "#ECECEC", borderRadius: 5, borderWidth: 1, marginTop: 15}}>
+                                    <View style={{ flexDirection: "row", borderColor: "#ffb400", backgroundColor: "#ffb400", borderRadius: 5, borderWidth: 1, marginTop: 15}}>
                                         <TouchableOpacity onPress={() => navigation.navigate("LikedSentencesDetail", { id: item._id })} style={[styles.wordsInnerCover, { flex: 8 }]} >
                                             <Text style={styles.wordText}>{item.flashCards.filter(flashCard => flashCard.symbol == targetLang.symbol)[0].sentence}</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => deleteSentence(targetLang.likedSentenceIds[index])} style={[styles.wordsInnerCover, { flex: 1 }]}>
-                                            <Icon name="text-box-remove" size={26} />
+                                            <Icon name="text-box-remove" size={26} color="#fff"/>
                                         </TouchableOpacity>
                                     </View>
                                 )
@@ -138,11 +138,12 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#C5EBFE',
         borderColor: "#E1E1E1",
-        borderWidth: 1
+        borderWidth: 1,
+        paddingTop: 0
     },
     innerContainer: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#075CAB",
         borderRadius: 20,
         padding: 20
     },
@@ -194,14 +195,15 @@ const styles = StyleSheet.create({
         marginTop: 0,
     },
     wordText: {
-        fontSize: 16,
-        color: "#505050",
-        marginLeft: 10
+        fontSize: 18,
+        color: "#fff",
+        marginLeft: 10,
+        fontWeight: "bold"
     },
     texttitle: {
         color: '#075CAB',
-        fontWeight: '500',
-        fontSize: 17,
+        fontWeight: 'bold',
+        fontSize: 20,
         marginTop: 40,
         marginBottom: 10,
         textAlign: 'left',

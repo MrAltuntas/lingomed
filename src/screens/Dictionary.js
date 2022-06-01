@@ -99,7 +99,7 @@ const Dictionary = () => {
                     <View style={styles.filterCover}>
 
                         <View style={{ flex: 0.1, }}>
-                            <Icon style={{ textAlign: "right" }} name="chevron-left" size={24} color="gray" />
+                            <Icon style={{ textAlign: "right" }} name="chevron-left" size={24} color="#fff" />
                         </View>
 
                         <FlatList
@@ -117,7 +117,7 @@ const Dictionary = () => {
                             }}
                         />
                         <View style={{ flex: 0.1, }}>
-                            <Icon style={{ textAlign: "right" }} name="chevron-right" size={24} color="gray" />
+                            <Icon style={{ textAlign: "right" }} name="chevron-right" size={24} color="#fff" />
                         </View>
 
                     </View>
@@ -156,9 +156,10 @@ const Dictionary = () => {
 
 const styles = StyleSheet.create({
     modalText: {
-        color: "#fff",
+        color: "#FFB400",
         fontWeight: "bold",
-        textAlign: "center"
+        textAlign: "center",
+        fontSize: 18
     },
     modalView: {
         margin: 0,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     },
     innerContainer: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#075CAB",
         borderRadius: 20,
         padding: 20
     },
@@ -213,13 +214,15 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginLeft: 10,
         marginRight: 10,
-        color: "#505050"
+        color: "#ffb400",
+        fontWeight: "bold"
     },
     filterTextSelected: {
         fontSize: 15,
         marginLeft: 10,
         marginRight: 10,
-        color: "#EC0B0B"
+        color: "#fff",
+        fontWeight: "bold"
     },
     filterCover: {
         marginTop: 20,
@@ -234,15 +237,17 @@ const styles = StyleSheet.create({
     wordsInnerCover: {
         padding: 5,
         marginTop: 20,
-        borderColor: "#ECECEC",
+        borderColor: "#ffb400",
+        backgroundColor:"#ffb400",
         borderRadius: 5,
         borderWidth: 1,
 
     },
     wordText: {
-        fontSize: 16,
-        color: "#505050",
-        marginLeft: 10
+        fontSize: 18,
+        color: "#fff",
+        marginLeft: 10,
+        fontWeight: "bold"
     }
 });
 

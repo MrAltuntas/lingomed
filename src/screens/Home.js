@@ -22,6 +22,8 @@ const Home = () => {
     }, [])
 
     return (
+        <ScrollView contentContainerStyle={{ flexGrow: 1, minHeight: '100%' }} canCancelContentTouches="true">
+
             <View style={styles.container}>
                 <View style={{ flex: 1, justifyContent: "center", flexDirection:"column", alignItems: "center" }}>
                     <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate("Categories")}>
@@ -41,9 +43,10 @@ const Home = () => {
                 </View>
                 {/* <LingomedBottomMenu contextLang={contextLang} navigation={navigation} /> */}
             </View>
+        </ScrollView>
     )
-
 }
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -75,7 +78,7 @@ const styles = StyleSheet.create({
         width: 93,
         height: 93
     },
-    text: { textAlign: 'center', color: '#075CAB', fontSize: 18, margin: 10, fontWeight: "600" },
+    text: { textAlign: 'center', color: '#075CAB', fontSize: 20, margin: 10, fontWeight: "bold" },
     images:{
         width: 120, height: 120, opacity: 1, borderRadius: 100,
         borderColor: "#075CAB", borderWidth: 3

@@ -57,7 +57,7 @@ const ExamsCategories = ({ route }) => {
                             <TouchableOpacity style={styles.buttonView} onPress={() => navigation.navigate('ExamsFlashCard', { examsCategoryId: item.examsCategoryId, examsCategoryName: item.name, examId: examId, examName: examName})}>
                                 <View style={styles.textCover}>
                                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                                        <Badge style={{ margin: 10, marginRight: 0, backgroundColor: "#ffff", borderColor: "#075CAB", borderWidth: 1, color: "#075CAB" }}>{index + 1}</Badge>
+                                        <Badge style={{ margin: 10, marginRight: 0, backgroundColor: "#FFB400", borderColor: "#fff", borderWidth: 1, color: "#fff" }}>{index + 1}</Badge>
                                         <Text style={styles.text}>{item.name}</Text>
                                     </View>
                                 </View>
@@ -75,13 +75,12 @@ const ExamsCategories = ({ route }) => {
 const styles = StyleSheet.create({
     texttitle: {
         color: '#075CAB',
-        fontWeight: '500',
-        fontSize: 20,
+        fontSize: 24,
         marginTop: 50,
         marginBottom: 10,
         textAlign: 'left',
         width: '100%',
-
+        fontFamily: "Roboto_700Bold"
     },
     container: {
         flex: 1,
@@ -104,18 +103,18 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'left',
-        color: '#075CAB',
+        color: '#fff',
         fontSize: 15,
         margin: 10,
+        fontFamily: "Roboto_700Bold"
     },
     textCover: {
         width: "100%",
         height: 50,
-        backgroundColor: "#ffff",
+        backgroundColor: "#ffb400",
         borderRadius: 10,
         marginTop: 10,
         justifyContent: "center"
     }
 });
-
 export default ExamsCategories

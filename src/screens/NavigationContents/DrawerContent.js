@@ -31,7 +31,7 @@ export function DrawerContent(props) {
     const paperTheme = useTheme();
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: "#ffcb4d" }}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
@@ -70,6 +70,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.homePage}
+                            labelStyle={{fontSize: 15}}
                             onPress={() =>  props.navigation.navigate('Home')}
                         />
                         <DrawerItem
@@ -81,6 +82,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.profile}
+                            labelStyle={{fontSize: 15}}
                             onPress={() => { props.navigation.navigate('Profile') }}
                         />
                         <DrawerItem
@@ -92,6 +94,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.dictionary}
+                            labelStyle={{fontSize: 15}}
                             onPress={() => { props.navigation.navigate('Dictionary') }}
                         />
                         <DrawerItem
@@ -103,6 +106,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.likedWords}
+                            labelStyle={{fontSize: 15}}
                             onPress={() => { props.navigation.navigate('LikedWords') }}
                         />
                         <DrawerItem 
@@ -114,6 +118,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.likedSentences}
+                            labelStyle={{fontSize: 15}}
                             onPress={() => {props.navigation.navigate('LikedSentence')}}
                         />
                         <DrawerItem 
@@ -125,6 +130,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label={contextLang.state.exams}
+                            labelStyle={{fontSize: 15}}
                             onPress={() => {props.navigation.navigate('Exams')}}
                         />
                     </Drawer.Section>
@@ -192,7 +198,7 @@ const styles = StyleSheet.create({
     },
     bottomDrawerSection: {
         marginBottom: 15,
-        borderTopColor: '#f4f4f4',
+        borderTopColor: '#00000029',
         borderTopWidth: 1
     },
     preference: {
